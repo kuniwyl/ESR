@@ -1,0 +1,11 @@
+C:\Users\jakub\Documents\ESR\Model\bin\Debug\net6.0\Model.deps.json
+C:\Users\jakub\Documents\ESR\Model\bin\Debug\net6.0\Model.dll
+C:\Users\jakub\Documents\ESR\Model\bin\Debug\net6.0\Model.pdb
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\Model.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\Model.AssemblyInfoInputs.cache
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\Model.AssemblyInfo.cs
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\Model.csproj.CoreCompileInputs.cache
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\Model.dll
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\refint\Model.dll
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\Model.pdb
+C:\Users\jakub\Documents\ESR\Model\obj\Debug\net6.0\ref\Model.dll

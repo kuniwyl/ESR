@@ -1,0 +1,11 @@
+.buttonComp {
+    transition: .3s;
+    min-width: 100px;
+    height: 40px;
+    opacity: 1;
+}
+
+.buttonComp.loading {
+    opacity: .5;
+    padding: 3px;
+}
