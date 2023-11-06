@@ -4,6 +4,7 @@ using Application.IServices;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Presentation.Utils;
 
 namespace Presentation.Services;
 
@@ -55,6 +56,7 @@ public class StudentService(SchoolContext context, IUserService userService, IMa
                 .FirstOrDefaultAsync();
             if (school == null) return null;
             
+            student.PasswordHash = PasswordUtil.GeneratePasswordHash(registerDto.Password);
             student.School = school;
             await context.Students.AddAsync(student);
             await context.SaveChangesAsync();
@@ -71,7 +73,7 @@ public class StudentService(SchoolContext context, IUserService userService, IMa
     {
         try
         {
-            if (await userService.IsUserExist(registerDto.Login))
+            if (await userService.IsUserExist(registerDto.Login, id))
             {
                 return null;
             }
@@ -83,6 +85,10 @@ public class StudentService(SchoolContext context, IUserService userService, IMa
                 return null;
             }
             mapper.Map(registerDto, student);
+            if (registerDto.Password != string.Empty)
+            {
+                student.PasswordHash = PasswordUtil.GeneratePasswordHash(registerDto.Password);
+            }
             await context.SaveChangesAsync();
             return mapper.Map<UserDto>(student);
         }

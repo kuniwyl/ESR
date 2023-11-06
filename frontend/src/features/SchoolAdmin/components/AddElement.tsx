@@ -1,14 +1,15 @@
-import { Toast } from 'react-bootstrap';
-import { ButtonF, InputGroupText } from '@/components/forms';
-import RegisterDto from '@/model/RegisterDto.ts';
 import { ChangeEvent, useEffect } from 'react';
-import '../styles/addUser.scss';
+import { Toast } from 'react-bootstrap';
+import { ButtonF, InputGroupText, InputUser } from '@/components/forms';
+import ElementRegisterDto from '@/model/ElementRegisterDto.ts';
 
-interface AddUserProps {
+interface AddElementProps {
   type: string;
   name: string;
-  user: RegisterDto;
-  setUser: (user: RegisterDto) => void;
+  element: ElementRegisterDto;
+  setElement: (element: ElementRegisterDto) => void;
+  dataSetList: Array<string>;
+  setSelected: (e: ChangeEvent<HTMLInputElement>) => void;
   show: boolean;
   setShow: (show: boolean) => void;
   handleAdd: () => void;
@@ -17,21 +18,23 @@ interface AddUserProps {
   additionalForm?: JSX.Element;
 }
 
-const AddUser = ({
+const AddElement = ({
   type,
   name,
-  user,
-  setUser,
+  element,
+  setElement,
+  dataSetList,
+  setSelected,
   show,
   setShow,
   handleAdd,
   isLoading,
   error,
   additionalForm,
-}: AddUserProps) => {
+}: AddElementProps) => {
   const setUserData = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setElement({ ...element, [name]: value });
   };
 
   useEffect(() => {
@@ -50,35 +53,24 @@ const AddUser = ({
       <Toast.Body>
         <InputGroupText
           type={'text'}
-          name={'login'}
-          label={'Login'}
-          placeholder={'Wprowadź login'}
-          value={user.login}
-          setValue={setUserData}
-        />
-        <InputGroupText
-          type={'password'}
-          name={'password'}
-          label={'Hasło'}
-          placeholder={'Wprowadź hasło'}
-          value={user.password}
+          name={'name'}
+          label={'Nazwa'}
+          placeholder={'Wprowadź nazwę'}
+          value={element.name}
           setValue={setUserData}
         />
         <InputGroupText
           type={'text'}
-          name={'firstName'}
-          label={'Imię'}
-          placeholder={'Wprowadź imię'}
-          value={user.firstName}
+          name={'description'}
+          label={'Opis'}
+          placeholder={'Wprowadź opis'}
+          value={element.description}
           setValue={setUserData}
         />
-        <InputGroupText
-          type={'text'}
-          name={'lastName'}
-          label={'Nazwisko'}
-          placeholder={'Wprowadź nazwisko'}
-          value={user.lastName}
-          setValue={setUserData}
+        <InputUser
+          datalist={dataSetList}
+          dataListName={'nauczyciele'}
+          setData={setSelected}
         />
         {additionalForm}
         <ButtonF
@@ -94,4 +86,4 @@ const AddUser = ({
   );
 };
 
-export default AddUser;
+export default AddElement;

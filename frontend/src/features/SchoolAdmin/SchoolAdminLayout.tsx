@@ -12,13 +12,17 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   setClasses,
+  setParents,
   setSchoolData,
   setStudents,
   setSubjects,
   setTeachers,
 } from '@/store/slices/schoolSlice.ts';
+import { useGetParentsQuery } from '@/store/api/parentSlice.ts';
 
 const SchoolAdminLayout = () => {
+  const auth = useAuth();
+  const navigate = useNavigate();
   const { data: schoolData, isLoading: isSchoolLoading } =
     useGetSchoolOwnQuery();
   const { data: studentsData, isLoading: isStudentsLoading } =
@@ -29,45 +33,62 @@ const SchoolAdminLayout = () => {
     useGetClassesQuery();
   const { data: subjectsData, isLoading: isSubjectsLoading } =
     useGetSubjectsQuery();
+  const { data: parentsData, isLoading: isParentsLoading } =
+    useGetParentsQuery();
   const dispatch = useDispatch();
   const isLoading =
-    isSchoolLoading ||
-    isStudentsLoading ||
-    isTeachersLoading ||
-    isClassesLoading ||
-    isSubjectsLoading;
+    isSchoolLoading &&
+    isStudentsLoading &&
+    isTeachersLoading &&
+    isClassesLoading &&
+    isSubjectsLoading &&
+    isParentsLoading;
 
   useEffect(() => {
-    dispatch(setSchoolData(schoolData));
+    if (auth.role !== UserRoles.SCHOOL_ADMIN) {
+      navigate(LOGIN);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (schoolData) {
+      dispatch(setSchoolData(schoolData));
+    }
   }, [schoolData, isSchoolLoading]);
 
   useEffect(() => {
-    dispatch(setStudents(studentsData));
+    if (studentsData) {
+      dispatch(setStudents(studentsData));
+    }
   }, [studentsData, isStudentsLoading]);
 
   useEffect(() => {
-    dispatch(setTeachers(teachersData));
+    if (teachersData) {
+      dispatch(setTeachers(teachersData));
+    }
   }, [teachersData, isTeachersLoading]);
 
   useEffect(() => {
-    dispatch(setClasses(classesData));
+    if (classesData) {
+      dispatch(setClasses(classesData));
+    }
   }, [classesData, isClassesLoading]);
 
   useEffect(() => {
-    dispatch(setSubjects(subjectsData));
+    if (subjectsData) {
+      dispatch(setSubjects(subjectsData));
+    }
   }, [subjectsData, isSubjectsLoading]);
 
-  const auth = useAuth();
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (parentsData) {
+      dispatch(setParents(parentsData));
+    }
+  }, [parentsData, isParentsLoading]);
 
   if (isLoading) {
     return <SpinnerComponent />;
-  } else if (
-    auth.isAuth &&
-    schoolData &&
-    (auth.role === UserRoles.SCHOOL_ADMIN ||
-      auth.role === UserRoles.SYSTEM_ADMIN)
-  ) {
+  } else if (schoolData) {
     return (
       <div>
         <Navigation />
@@ -75,8 +96,6 @@ const SchoolAdminLayout = () => {
         <Outlet />
       </div>
     );
-  } else {
-    navigate(LOGIN);
   }
 };
 

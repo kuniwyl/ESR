@@ -1,6 +1,7 @@
 import { api, CLASS_STUDENT_TAG, CLASS_TAG } from '@/store/api/api.ts';
 import ClassDto from '@/model/ClassDto.ts';
 import UserShortDto from '@/model/UserShortDto.ts';
+import ElementRegisterDto from '@/model/ElementRegisterDto.ts';
 
 const classSlice = api.injectEndpoints({
   endpoints: builder => ({
@@ -18,7 +19,7 @@ const classSlice = api.injectEndpoints({
       }),
       providesTags: [CLASS_TAG],
     }),
-    postClass: builder.mutation<ClassDto, ClassDto>({
+    postClass: builder.mutation<ClassDto, ElementRegisterDto>({
       query: classData => ({
         url: '/classes',
         method: 'POST',
@@ -26,9 +27,12 @@ const classSlice = api.injectEndpoints({
       }),
       invalidatesTags: [CLASS_TAG],
     }),
-    putClass: builder.mutation<ClassDto, ClassDto>({
-      query: classData => ({
-        url: '/classes',
+    putClass: builder.mutation<
+      ClassDto,
+      { id: number; classData: ElementRegisterDto }
+    >({
+      query: ({ id, classData }) => ({
+        url: `/classes/${id}`,
         method: 'PUT',
         body: classData,
       }),

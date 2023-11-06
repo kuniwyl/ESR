@@ -1,10 +1,9 @@
 import UserShortDto from '@/model/UserShortDto.ts';
 
-interface ClassDto {
-  id: string;
+interface ElementRegisterDto {
   name: string;
   description: string;
   teacher: UserShortDto;
 }
 
-export default ClassDto;
+export default ElementRegisterDto;

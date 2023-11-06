@@ -28,6 +28,20 @@ public class UserService : IUserService
         return false;
     }
 
+    public async Task<bool> IsUserExist(string login, int id)
+    {
+        var student = await _context.Students.AnyAsync(u => u.Login == login && u.Id != id);
+        var teacher = await _context.Teachers.AnyAsync(u => u.Login == login && u.Id != id);
+        var schoolAdmin = await _context.SchoolAdmins.AnyAsync(u => u.Login == login && u.Id != id);
+        var systemAdmin = await _context.SystemAdmins.AnyAsync(u => u.Login == login && u.Id != id);
+        var parent = await _context.Parents.AnyAsync(u => u.Login == login && u.Id != id);
+        if (student || teacher || schoolAdmin || systemAdmin || parent)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public async Task<IUser?> GetUser(string login)
     {
         var student = await _context.Students.FirstOrDefaultAsync(u => u.Login == login);

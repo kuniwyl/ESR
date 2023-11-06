@@ -1,36 +1,40 @@
 import Container from 'react-bootstrap/Container';
 import { ButtonF } from '@/components/forms';
-import AddUser from '@/features/SchoolAdmin/components/AddUser.tsx';
 import { Table } from 'react-bootstrap';
 import { useState } from 'react';
-import { RegisterData } from '@/model/AuthInterfaces.ts';
+import AddElement from '@/features/SchoolAdmin/components/AddElement.tsx';
+import ElementRegisterDto from '@/model/ElementRegisterDto.ts';
 
-interface TableCompProps {
+interface TableElementProps {
   type: string;
   name: string;
   thead: JSX.Element;
   tbody: JSX.Element[];
-  user: RegisterData;
-  setUser: (user: RegisterData) => void;
+  element: ElementRegisterDto;
+  setElement: (element: ElementRegisterDto) => void;
+  dataList: Array<string>;
+  setSelected: (selected: string) => void;
   handleAdd: () => void;
   isLoading: boolean;
   error?: string | null;
   additionalForm?: JSX.Element;
 }
 
-const TableComp = ({
+const TableElement = ({
   type,
   name,
   thead,
   tbody,
-  user,
-  setUser,
+  element,
+  setElement,
+  dataList,
+  setSelected,
   handleAdd,
   isLoading,
   error,
   additionalForm,
-}: TableCompProps) => {
-  const [show, setShow] = useState<boolean>(false);
+}: TableElementProps) => {
+  const [show, setShow] = useState(false);
 
   return (
     <Container className="mt-3">
@@ -41,11 +45,13 @@ const TableComp = ({
         onClick={() => setShow(!show)}
         size={'sm'}
       />
-      <AddUser
+      <AddElement
         type={type}
         name={name}
-        user={user}
-        setUser={setUser}
+        element={element}
+        setElement={setElement}
+        dataSetList={dataList}
+        setSelected={setSelected}
         show={show}
         setShow={setShow}
         handleAdd={handleAdd}
@@ -61,4 +67,4 @@ const TableComp = ({
   );
 };
 
-export default TableComp;
+export default TableElement;

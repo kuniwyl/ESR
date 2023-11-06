@@ -1,4 +1,4 @@
-import { api, STUDENT_TAG } from '@/store/api/api.ts';
+import { api, PARENT_TAG, STUDENT_TAG } from '@/store/api/api.ts';
 import UserResponse from '@/model/UserResponse.ts';
 import RegisterDto from '@/model/RegisterDto.ts';
 import UserShortDto from '@/model/UserShortDto.ts';
@@ -43,7 +43,7 @@ const studentSlice = api.injectEndpoints({
         url: `/students/${studentId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [STUDENT_TAG],
+      invalidatesTags: [STUDENT_TAG, PARENT_TAG],
     }),
   }),
 });

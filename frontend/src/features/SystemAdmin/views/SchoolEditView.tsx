@@ -36,7 +36,6 @@ const SchoolEditView = () => {
     if (data) {
       setSchool(data);
     }
-    console.log(data);
   }, [isLoading]);
 
   const handleSave = async () => {

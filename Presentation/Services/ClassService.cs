@@ -54,7 +54,7 @@ public class ClassService: IClassService
         try
         {
             var @class = _mapper.Map<Class>(classDto);
-            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == classDto.TeacherShort.Id);
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == classDto.Teacher.Id);
             if (teacher == null) return null;
             var school = await _context.Schools.FirstOrDefaultAsync(s => s.Id == schoolId);
             if (school == null) return null;
@@ -79,7 +79,8 @@ public class ClassService: IClassService
                 .Include(c => c.Teacher)
                 .FirstOrDefaultAsync(c => c.Id == id && c.SchoolId == schoolId);
             if (classEntity == null) return null;
-            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == classDto.TeacherShort.Id);
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == classDto.Teacher.Id);
+            Console.WriteLine(teacher);
             if (teacher == null) return null;
             
             classEntity.Name = classDto.Name;

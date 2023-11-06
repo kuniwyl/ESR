@@ -4,11 +4,13 @@ import { useState } from 'react';
 import TableComp from '@/features/SchoolAdmin/components/TableComp.tsx';
 import { usePostParentMutation } from '@/store/api/parentSlice.ts';
 import { InputUser } from '@/components/forms';
+import ParentList from '@/features/SchoolAdmin/components/ParentList.tsx';
 
 const ShowParentsView = () => {
   const { parents, students } = useSchool();
   const [postParent, { isLoading }] = usePostParentMutation();
   const [selectUser, setSelectUser] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<RegisterDto>({
     login: '',
     password: '',
@@ -17,15 +19,25 @@ const ShowParentsView = () => {
   });
 
   const handleAddParent = async () => {
-    console.log(selectUser);
-    return;
-    await postParent(user);
+    const student = students.filter(s => s.login === selectUser)[0];
+    if (!student) {
+      setError('Nie znaleziono ucznia');
+      setTimeout(() => setError(null), 2000);
+      return;
+    }
+    await postParent({ parent: user, studentId: Number.parseInt(student.id) });
     setUser({
       login: '',
       password: '',
       firstName: '',
       lastName: '',
     });
+    setSelectUser(null);
+  };
+
+  const setSelectUserValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSelectUser(value);
   };
 
   const thead = (
@@ -35,38 +47,34 @@ const ShowParentsView = () => {
       <th>Imię</th>
       <th>Nazwisko</th>
       <th>Dziecko</th>
+      <th>Edytuj</th>
+      <th>Usuń</th>
     </tr>
   );
 
-  const parentsList = parents.map((item, index) => {
-    return (
-      <tr key={index}>
-        <td>{item.id}</td>
-        <td>{item.login}</td>
-        <td>{item.firstName}</td>
-        <td>{item.lastName}</td>
-        <td>{item.student.login}</td>
-      </tr>
-    );
+  const parentsList = parents.map(item => {
+    return <ParentList key={item.id} item={item} />;
   });
 
   const additionalForm = (
     <InputUser
       datalist={students.map(s => s.login)}
       dataListName={'ucznia'}
-      setData={setSelectUser}
+      setData={setSelectUserValue}
     />
   );
 
   return (
     <TableComp
-      type={'rodzica'}
+      type={'Dodaj'}
+      name={'rodzica'}
       thead={thead}
       tbody={parentsList}
       user={user}
       setUser={setUser}
       handleAdd={handleAddParent}
       isLoading={isLoading}
+      error={error}
       additionalForm={additionalForm}
     />
   );

@@ -15,7 +15,7 @@ export interface ButtonProps {
   onClick: () => void;
   size: 'sm' | 'lg';
   isSuccess?: boolean;
-  error?: string;
+  error?: string | null;
 }
 
 export const ButtonType = {

@@ -2,6 +2,8 @@ import { InputProps } from './InputManager.ts';
 import { Form, InputGroup } from 'react-bootstrap';
 import { ChangeEvent } from 'react';
 
+import './input.scss';
+
 const InputGroupText = ({
   value,
   setValue,
@@ -11,7 +13,7 @@ const InputGroupText = ({
   name,
 }: InputProps) => {
   return (
-    <InputGroup className={'mb-3'}>
+    <InputGroup className={'inputGroupText mb-3'}>
       <InputGroup.Text id={name + 'text'}>{label}</InputGroup.Text>
       <Form.Control
         type={type}

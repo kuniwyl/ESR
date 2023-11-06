@@ -41,7 +41,7 @@ public class AutoMapperProfile : Profile
         CreateMap<Subject, SubjectDto>().ForMember(x => x.Teacher, opt => opt.MapFrom(src => src.Teacher));
         CreateMap<SubjectDto, Subject>();
 
-        CreateMap<Class, ClassDto>().ForMember(x => x.TeacherShort, opt => opt.MapFrom(src => src.Teacher));
+        CreateMap<Class, ClassDto>().ForMember(x => x.Teacher, opt => opt.MapFrom(src => src.Teacher));
         CreateMap<ClassDto, Class>();
     }
 }

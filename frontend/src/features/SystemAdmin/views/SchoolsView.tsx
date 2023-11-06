@@ -21,10 +21,7 @@ const SchoolsView = () => {
       return;
     }
 
-    const res = await deleteSchool(Number.parseInt(id)).unwrap();
-    if (res) {
-      console.log(res);
-    }
+    await deleteSchool(Number.parseInt(id));
   };
 
   if (isLoading) {

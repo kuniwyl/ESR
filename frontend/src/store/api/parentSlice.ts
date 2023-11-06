@@ -18,9 +18,12 @@ const parentSlice = api.injectEndpoints({
       }),
       providesTags: [PARENT_TAG],
     }),
-    postParent: builder.mutation<ParentDto, RegisterDto>({
-      query: parent => ({
-        url: '/parents',
+    postParent: builder.mutation<
+      ParentDto,
+      { parent: RegisterDto; studentId: number }
+    >({
+      query: ({ parent, studentId }) => ({
+        url: `/parents/student/${studentId}`,
         method: 'POST',
         body: parent,
       }),

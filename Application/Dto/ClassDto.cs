@@ -6,5 +6,5 @@ public class ClassDto
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     
-    public UserShortDto TeacherShort { get; set; } = new();
+    public UserShortDto Teacher { get; set; } = new();
 }

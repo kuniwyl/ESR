@@ -1,6 +1,12 @@
 import InputUserManager from '@/components/forms/InputUser/InputUserManager.ts';
+import './input.scss';
 
-const InputUser = ({ datalist, dataListName, setData }: InputUserManager) => {
+const InputUser = ({
+  datalist,
+  dataListName,
+  setData,
+  initialValue,
+}: InputUserManager) => {
   const datalistOptions = datalist.map((item, index) => {
     return <option key={index} value={item} />;
   });
@@ -8,10 +14,11 @@ const InputUser = ({ datalist, dataListName, setData }: InputUserManager) => {
   return (
     <>
       <input
-        className="form-control my-3"
+        className="form-control inputUser mb-3"
         list="datalistOptions"
         id="exampleDataList"
-        onChange={e => setData(e.target.value)}
+        defaultValue={initialValue}
+        onChange={setData}
         placeholder={`Wyszukaj ${dataListName}`}
       />
       <datalist id="datalistOptions">{datalistOptions}</datalist>

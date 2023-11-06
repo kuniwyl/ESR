@@ -1,6 +1,7 @@
 import { api, SUBJECT_STUDENT_TAG, SUBJECT_TAG } from '@/store/api/api.ts';
 import SubjectDto from '@/model/SubjectDto.ts';
 import UserShortDto from '@/model/UserShortDto.ts';
+import ElementRegisterDto from '@/model/ElementRegisterDto.ts';
 
 const subjectSlice = api.injectEndpoints({
   endpoints: builder => ({
@@ -18,7 +19,7 @@ const subjectSlice = api.injectEndpoints({
       }),
       providesTags: [SUBJECT_TAG],
     }),
-    postSubject: builder.mutation<SubjectDto, SubjectDto>({
+    postSubject: builder.mutation<SubjectDto, ElementRegisterDto>({
       query: subject => ({
         url: '/subjects',
         method: 'POST',
@@ -28,7 +29,7 @@ const subjectSlice = api.injectEndpoints({
     }),
     putSubject: builder.mutation<
       SubjectDto,
-      { id: number; subject: SubjectDto }
+      { id: number; subject: ElementRegisterDto }
     >({
       query: ({ id, subject }) => ({
         url: `/subjects/${id}`,

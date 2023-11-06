@@ -1,43 +1,56 @@
 import { useSchool } from '@/store/slices/schoolSlice.ts';
-import Container from 'react-bootstrap/Container';
-import { Table } from 'react-bootstrap';
-import { ButtonF } from '@/components/forms';
+import TableComp from '@/features/SchoolAdmin/components/TableComp.tsx';
+import { useState } from 'react';
+import { RegisterData } from '@/model/AuthInterfaces.ts';
+import { usePostTeacherMutation } from '@/store/api/teacherSlice.ts';
+import TeacherList from '@/features/SchoolAdmin/components/TeacherList.tsx';
 
 const ShowTeachersView = () => {
   const { teachers } = useSchool();
+  const [postTeacher, { isLoading }] = usePostTeacherMutation();
+  const [user, setUser] = useState({
+    login: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+  } as RegisterData);
 
-  const teachersList = teachers.map((item, index) => {
-    return (
-      <tr key={index}>
-        <td>{item.id}</td>
-        <td>{item.login}</td>
-        <td>{item.firstName}</td>
-        <td>{item.lastName}</td>
-      </tr>
-    );
+  const handleAdd = async () => {
+    await postTeacher(user);
+    setUser({
+      login: '',
+      password: '',
+      firstName: '',
+      lastName: '',
+    } as RegisterData);
+  };
+
+  const thead = (
+    <tr>
+      <th>#</th>
+      <th>Login</th>
+      <th>Imię</th>
+      <th>Nazwisko</th>
+      <th>Edytuj</th>
+      <th>Usuń</th>
+    </tr>
+  );
+
+  const teachersList = teachers.map(item => {
+    return <TeacherList key={item.id} item={item} />;
   });
 
   return (
-    <Container className="mt-3">
-      <ButtonF
-        variant={'dark'}
-        text={'Dodaj nauczyciela'}
-        isLoading={false}
-        onClick={() => {}}
-        size={'sm'}
-      />
-      <Table className="mt-3">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Login</th>
-            <th>Imię</th>
-            <th>Nazwisko</th>
-          </tr>
-        </thead>
-        <tbody>{teachersList}</tbody>
-      </Table>
-    </Container>
+    <TableComp
+      type={'Dodaj'}
+      name={'nauczyciela'}
+      thead={thead}
+      tbody={teachersList}
+      user={user}
+      setUser={setUser}
+      handleAdd={handleAdd}
+      isLoading={isLoading}
+    />
   );
 };
 

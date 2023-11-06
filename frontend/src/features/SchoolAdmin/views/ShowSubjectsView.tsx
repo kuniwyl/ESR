@@ -1,35 +1,79 @@
 import { useSchool } from '@/store/slices/schoolSlice.ts';
-import Container from 'react-bootstrap/Container';
-import { Table } from 'react-bootstrap';
+import { useState } from 'react';
+import ElementRegisterDto from '@/model/ElementRegisterDto.ts';
+import { usePostSubjectMutation } from '@/store/api/subjectSlice.ts';
+import TableElement from '@/features/SchoolAdmin/components/TableElement.tsx';
+import SubjectList from '@/features/SchoolAdmin/components/SubjectList.tsx';
 
 const ShowSubjectsView = () => {
-  const { subjects } = useSchool();
+  const { subjects, teachers } = useSchool();
+  const [postSubject, { isLoading }] = usePostSubjectMutation();
+  const [element, setElement] = useState<ElementRegisterDto>({
+    name: '',
+    description: '',
+    teacher: {
+      id: '',
+      login: '',
+      firstName: '',
+      lastName: '',
+    },
+  });
+  const dataList = teachers.map(t => t.login);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [error, setError] = useState<string>('');
 
-  const subjectsList = subjects.map((item, index) => {
-    return (
-      <tr key={index}>
-        <td>{item.id}</td>
-        <td>{item.name}</td>
-        <td>{item.description}</td>
-        <td>{item.teacher.login}</td>
-      </tr>
-    );
+  const handleAdd = async () => {
+    const teacher = teachers.filter(t => t.login === selected)[0];
+    if (teacher == null) {
+      setError('Nie znaleziono nauczyciela');
+      setTimeout(() => {
+        setError('');
+      }, 2000);
+      return;
+    }
+    element.teacher = teacher;
+    await postSubject(element);
+    setElement({
+      name: '',
+      description: '',
+      teacher: {
+        id: '',
+        login: '',
+        firstName: '',
+        lastName: '',
+      },
+    });
+  };
+
+  const thead = (
+    <tr>
+      <th>#</th>
+      <th>Nazwa</th>
+      <th>Opis</th>
+      <th>Nauczyciel</th>
+      <th>Edytuj</th>
+      <th>Usuń</th>
+    </tr>
+  );
+
+  const subjectsList = subjects.map(item => {
+    return <SubjectList key={item.id} item={item} />;
   });
 
   return (
-    <Container className="mt-3">
-      <Table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nazwa</th>
-            <th>Opis</th>
-            <th>Nauczyciel</th>
-          </tr>
-        </thead>
-        <tbody>{subjectsList}</tbody>
-      </Table>
-    </Container>
+    <TableElement
+      type={'Dodaj'}
+      name={'klasę'}
+      thead={thead}
+      tbody={subjectsList}
+      element={element}
+      setElement={setElement}
+      dataList={dataList}
+      setSelected={setSelected}
+      handleAdd={handleAdd}
+      isLoading={isLoading}
+      error={error}
+    />
   );
 };
 

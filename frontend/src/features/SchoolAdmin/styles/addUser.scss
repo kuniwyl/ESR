@@ -1,3 +1,7 @@
 .addUser {
     position: absolute;
 }
+
+.addUser.Edytuj {
+    transform: translateX(-50%);
+}
