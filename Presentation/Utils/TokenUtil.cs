@@ -2,7 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Domain.Entities;
+using Domain.Entities_v2;
+using Domain.Entities_v2.Types;
+using Domain.Entities_v2.Users;
 using Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 
@@ -10,32 +12,22 @@ namespace Presentation.Utils;
 
 public static class TokenUtil
 {
-    public static string CreateToken(IUser user, IConfiguration configuration)
+    public static string CreateToken(User user, IConfiguration configuration)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Login),
-            new Claim(ClaimTypes.Role, user.Role.ToString()),
+            new Claim("Id", user.Id.ToString()),
+            new Claim("Login", user.Login),
+            new Claim("Role", user.Role),
         };
-        
-        switch (user)
+
+        if (user is SchoolUser schoolUser)
         {
-            case Student student:
-                claims.Add(new Claim("SchoolId", student.SchoolId.ToString()));
-                break;
-            case Teacher teacher:
-                claims.Add(new Claim("SchoolId", teacher.SchoolId.ToString()));
-                break;
-            case Parent parent:
-                claims.Add(new Claim("SchoolId", parent.SchoolId.ToString()));
-                break;
-            case SchoolAdmin schoolAdmin:
-                claims.Add(new Claim("SchoolId", schoolAdmin.SchoolId.ToString()));
-                break;
-            case SystemAdmin systemAdmin:
-                claims.Add(new Claim("SchoolId", "-1"));
-                break;
+            claims.Add(new Claim("SchoolId", schoolUser.SchoolId.ToString()));
+        }
+        else
+        {
+            claims.Add(new Claim("SchoolId", "-69"));
         }
         
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("JWTKey:Secret").Value!));

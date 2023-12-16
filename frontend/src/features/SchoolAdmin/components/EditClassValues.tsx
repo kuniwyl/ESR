@@ -1,22 +1,18 @@
-import { ButtonF, InputGroupText, InputUser } from '@/components/forms';
-import { useSchool } from '@/store/slices/schoolSlice.ts';
-import { usePutClassMutation } from '@/store/api/classSlice.ts';
-import { ChangeEvent, useEffect, useState } from 'react';
-import ClassDto from '@/model/ClassDto.ts';
+import { InputGroupText } from '@/components/forms';
+import { ChangeEvent, useState } from 'react';
+import ClassDto from '@/domain/dtos/ClassDto.ts';
 
 const EditClassValues = ({ data }: { data: ClassDto }) => {
-  const { teachers } = useSchool();
-  const teachersList = teachers.map(t => t.login);
-  const [putClass, { isLoading: saving, isSuccess }] = usePutClassMutation();
+  // const teachersList = teachers.map(t => t.login);
   const [classData, setClassData] = useState<ClassDto>(data);
-  const [success, setSuccess] = useState(false);
+  // const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    setSuccess(isSuccess);
-    setTimeout(() => {
-      setSuccess(false);
-    }, 2500);
-  }, [isSuccess]);
+  // useEffect(() => {
+  //   setSuccess(isSuccess);
+  //   setTimeout(() => {
+  //     setSuccess(false);
+  //   }, 2500);
+  // }, [isSuccess]);
 
   const setClassDataValue = (e: ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
@@ -24,15 +20,16 @@ const EditClassValues = ({ data }: { data: ClassDto }) => {
     setClassData({ ...classData, [name]: value });
   };
 
-  const setClassDataTeacher = (e: ChangeEvent<HTMLInputElement>) => {
-    const login = e.target.value;
-    const teacher = teachers.filter(t => t.login === login)[0];
-    setClassData({ ...classData, teacher: teacher });
-  };
+  // const setClassDataTeacher = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const login = e.target.value;
+  //   console.log(login);
+  // const teacher = teachers.filter(t => t.login === login)[0];
+  // setClassData({ ...classData, teacher: teacher });
+  // };
 
-  const handleSave = async () => {
-    await putClass({ id: Number.parseInt(data.id), classData: classData });
-  };
+  // const handleSave = async () => {
+  // await putClass({ id: Number.parseInt(data.id), classData: classData });
+  // };
 
   return (
     <>
@@ -53,21 +50,21 @@ const EditClassValues = ({ data }: { data: ClassDto }) => {
           value={classData.description}
           setValue={setClassDataValue}
         />
-        <InputUser
-          datalist={teachersList}
-          dataListName={'Nauczyciele'}
-          setData={setClassDataTeacher}
-          initialValue={data.teacher.login}
-        />
+        {/*<InputUser*/}
+        {/*  datalist={teachersList}*/}
+        {/*  dataListName={'Nauczyciele'}*/}
+        {/*  setData={setClassDataTeacher}*/}
+        {/*  initialValue={data.teacher.login}*/}
+        {/*/>*/}
       </div>
-      <ButtonF
-        variant={'dark'}
-        text={'Zapisz'}
-        isLoading={saving}
-        onClick={handleSave}
-        size={'sm'}
-        isSuccess={success}
-      />
+      {/*<ButtonF*/}
+      {/*  variant={'dark'}*/}
+      {/*  text={'Zapisz'}*/}
+      {/*  isLoading={saving}*/}
+      {/*  onClick={handleSave}*/}
+      {/*  size={'sm'}*/}
+      {/*  isSuccess={success}*/}
+      {/*/>*/}
     </>
   );
 };

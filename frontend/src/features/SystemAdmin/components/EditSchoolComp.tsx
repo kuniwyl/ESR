@@ -2,11 +2,11 @@ import { Col, Row } from 'react-bootstrap';
 import { ButtonF, InputGroupText } from '@/components/forms';
 import Container from 'react-bootstrap/Container';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { ModifySchoolData } from '@/model/SystemAdminInterfaces.ts';
+import SchoolDto from '@/domain/dtos/SchoolDto.ts';
 
 interface EditSchoolCompProps {
-  school: ModifySchoolData;
-  setSchool: (e: ModifySchoolData) => void;
+  school: SchoolDto;
+  setSchool: (e: SchoolDto) => void;
   isSaving: boolean;
   isSavingSuccess: boolean;
   handleSave: () => void;

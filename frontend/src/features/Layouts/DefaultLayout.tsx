@@ -5,7 +5,6 @@ const DefaultLayout = () => {
   return (
     <div>
       <Navigation />
-
       <Outlet />
     </div>
   );

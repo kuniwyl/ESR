@@ -1,9 +1,7 @@
-import { PencilSquare, TrashFill } from 'react-bootstrap-icons';
+import { PencilSquare } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
-import { useDeleteClassMutation } from '@/store/api/classSlice.ts';
-import { SpinnerComponent } from '@/components/ui';
-import { EDIT_CLASS } from '@/config.ts';
-import ClassDto from '@/model/ClassDto.ts';
+import ClassDto from '@/domain/dtos/ClassDto.ts';
+import { EDIT_CLASS } from '@/configuration/config.ts';
 
 interface ClassListProps {
   item: ClassDto;
@@ -11,15 +9,15 @@ interface ClassListProps {
 
 const ClassList = ({ item }: ClassListProps) => {
   const navigate = useNavigate();
-  const [deleteClass, { isLoading }] = useDeleteClassMutation();
-
-  const handleDelete = async () => {
-    const confirm = window.confirm(
-      `Czy na pewno chcesz usunąć klasę ${item.name}`,
-    );
-    if (!confirm) return;
-    await deleteClass(Number.parseInt(item.id));
-  };
+  // const [deleteClass, { isLoading }] = useDeleteClassMutation();
+  //
+  // const handleDelete = async () => {
+  //   const confirm = window.confirm(
+  //     `Czy na pewno chcesz usunąć klasę ${item.name}`,
+  //   );
+  //   if (!confirm) return;
+  //   await deleteClass(Number.parseInt(item.id));
+  // };
 
   return (
     <tr key={'class' + item.id}>
@@ -30,9 +28,9 @@ const ClassList = ({ item }: ClassListProps) => {
       <td>
         <PencilSquare onClick={() => navigate(EDIT_CLASS + item.id)} />
       </td>
-      <td onClick={handleDelete}>
-        {isLoading ? <SpinnerComponent /> : <TrashFill />}
-      </td>
+      {/*<td onClick={handleDelete}>*/}
+      {/*  {isLoading ? <SpinnerComponent /> : <TrashFill />}*/}
+      {/*</td>*/}
     </tr>
   );
 };

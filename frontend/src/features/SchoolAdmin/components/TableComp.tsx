@@ -1,17 +1,15 @@
 import Container from 'react-bootstrap/Container';
 import { ButtonF } from '@/components/forms';
-import AddUser from '@/features/SchoolAdmin/components/AddUser.tsx';
 import { Table } from 'react-bootstrap';
 import { useState } from 'react';
-import { RegisterData } from '@/model/AuthInterfaces.ts';
 
 interface TableCompProps {
   type: string;
   name: string;
   thead: JSX.Element;
   tbody: JSX.Element[];
-  user: RegisterData;
-  setUser: (user: RegisterData) => void;
+  // user: RegisterData;
+  // setUser: (user: RegisterData) => void;
   handleAdd: () => void;
   isLoading: boolean;
   error?: string | null;
@@ -23,13 +21,13 @@ const TableComp = ({
   name,
   thead,
   tbody,
-  user,
-  setUser,
-  handleAdd,
-  isLoading,
-  error,
-  additionalForm,
-}: TableCompProps) => {
+} // user,
+// setUser,
+// handleAdd,
+// isLoading,
+// error,
+// additionalForm,
+: TableCompProps) => {
   const [show, setShow] = useState<boolean>(false);
 
   return (
@@ -41,18 +39,18 @@ const TableComp = ({
         onClick={() => setShow(!show)}
         size={'sm'}
       />
-      <AddUser
-        type={type}
-        name={name}
-        user={user}
-        setUser={setUser}
-        show={show}
-        setShow={setShow}
-        handleAdd={handleAdd}
-        isLoading={isLoading}
-        error={error}
-        additionalForm={additionalForm}
-      />
+      {/*<AddUser*/}
+      {/*  type={type}*/}
+      {/*  name={name}*/}
+      {/*  user={user}*/}
+      {/*  setUser={setUser}*/}
+      {/*  show={show}*/}
+      {/*  setShow={setShow}*/}
+      {/*  handleAdd={handleAdd}*/}
+      {/*  isLoading={isLoading}*/}
+      {/*  error={error}*/}
+      {/*  additionalForm={additionalForm}*/}
+      {/*/>*/}
       <Table>
         <thead>{thead}</thead>
         <tbody>{tbody}</tbody>

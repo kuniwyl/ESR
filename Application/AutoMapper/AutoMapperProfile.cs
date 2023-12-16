@@ -1,6 +1,10 @@
 using Application.Dto;
+using Application.Dto.School;
+using Application.Dto.Users;
 using AutoMapper;
-using Domain.Entities;
+using Domain.Entities_v2;
+using Domain.Entities_v2.School;
+using Domain.Entities_v2.Users;
 
 namespace Application.AutoMapper;
 
@@ -8,40 +12,78 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<IUser, UserDto>();
-        CreateMap<UserDto, IUser>();
-
-        CreateMap<Student, UserShortDto>();
-        CreateMap<Teacher, UserShortDto>();
-        CreateMap<Parent, UserShortDto>();
-        CreateMap<UserShortDto, Student>();
-        CreateMap<UserShortDto, Teacher>();
-        CreateMap<UserShortDto, Parent>();
+        // School
+        CreateMap<Assignment, AssignmentDto>();
+        CreateMap<AssignmentDto, Assignment>();
         
-        CreateMap<Student, UserDto>();
-        CreateMap<Teacher, UserDto>();
-        CreateMap<Parent, UserDto>();
-        CreateMap<UserDto, Student>();
-        CreateMap<UserDto, Teacher>();
-        CreateMap<UserDto, Parent>();
+        CreateMap<BehaviorGrade, BehaviorGradeDto>();
+        CreateMap<BehaviorGradeDto, BehaviorGrade>();
         
-        CreateMap<Parent, ParentDto>().ForMember(x => x.Student, opt => opt.MapFrom(src => src.Student));
-        CreateMap<ParentDto, Parent>();
+        CreateMap<ClassNotice, ClassNoticeDto>();
+        CreateMap<ClassNoticeDto, ClassNotice>();
         
-        CreateMap<RegisterDto, Student>();
-        CreateMap<RegisterDto, Teacher>();
-        CreateMap<RegisterDto, Parent>();
+        CreateMap<Class, ClassDto>();
+        CreateMap<ClassDto, Class>();
+        
+        CreateMap<Grade, GradeDto>();
+        CreateMap<GradeDto, Grade>();
 
-        CreateMap<SchoolAdmin, UserDto>();
-        CreateMap<UserDto, SchoolAdmin>();
-
+        CreateMap<Notice, NoticeDto>();
+        CreateMap<NoticeDto, Notice>();
+        
         CreateMap<School, SchoolDto>();
-        CreateMap<School, SchoolDataDto>();
+        CreateMap<SchoolDto, School>();
         
-        CreateMap<Subject, SubjectDto>().ForMember(x => x.Teacher, opt => opt.MapFrom(src => src.Teacher));
+        CreateMap<Semester, SemesterDto>();
+        CreateMap<SemesterDto, Semester>();
+        
+        CreateMap<Subject, SubjectDto>();
         CreateMap<SubjectDto, Subject>();
 
-        CreateMap<Class, ClassDto>().ForMember(x => x.Teacher, opt => opt.MapFrom(src => src.Teacher));
-        CreateMap<ClassDto, Class>();
+
+        CreateMap<Parent, ParentDto>();
+        CreateMap<ParentDto, Parent>();
+        
+        CreateMap<SchoolAdmin, SchoolAdminDto>();
+        CreateMap<SchoolAdminDto, SchoolAdmin>();
+        
+        CreateMap<Student, StudentDto>();
+        CreateMap<StudentDto, Student>();
+        
+        CreateMap<Teacher, TeacherDto>();
+        CreateMap<TeacherDto, Teacher>();
+
+        CreateMap<SystemAdmin, SystemAdminDto>();
+        CreateMap<SystemAdminDto, SystemAdmin>();
+        
+        // Users
+        CreateMap<Parent, ParentDto>();
+        CreateMap<ParentDto, Parent>();
+        
+        CreateMap<SchoolAdmin, SchoolAdminDto>();
+        CreateMap<SchoolAdminDto, SchoolAdmin>();
+        
+        CreateMap<Student, StudentDto>();
+        CreateMap<StudentDto, Student>();
+        
+        CreateMap<Teacher, TeacherDto>();
+        CreateMap<TeacherDto, Teacher>();
+        
+        CreateMap<SystemAdmin, SystemAdminDto>();
+        CreateMap<SystemAdminDto, SystemAdmin>();
+        
+        CreateMap<Parent, UserShortDto>();
+        CreateMap<Teacher, UserShortDto>();
+        CreateMap<Student, UserShortDto>();
+        CreateMap<SchoolAdmin, UserShortDto>();
+        CreateMap<SystemAdmin, UserShortDto>();
+        
+        CreateMap<CreateUserDto, Parent>();
+        CreateMap<CreateUserDto, Teacher>();
+        CreateMap<CreateUserDto, Student>();
+        CreateMap<CreateUserDto, SchoolAdmin>();
+        CreateMap<CreateUserDto, SystemAdmin>();
+        
+        CreateMap<CreateStudentDto, Student>();
     }
 }

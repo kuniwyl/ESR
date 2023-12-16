@@ -1,12 +1,13 @@
 using Application.Dto;
 using Application.IServices;
+using Application.IServices.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Utils;
 
 namespace Presentation.Controllers;
 
 [ApiController]
-[Route("/api/user")]
+[Route("/api/auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -15,31 +16,20 @@ public class AuthController : ControllerBase
     {
         _authService = authService;
     }
-
-    [HttpPost("register")]
-    public async Task<ActionResult<UserDto>> Register(RegisterSystemAdminDto registerDto)
-    {
-        var userDto = await _authService.Register(registerDto);
-        if (userDto == null)
-        {
-            return BadRequest("User already exists");
-        }
-        return Ok(userDto);
-    }
     
     [HttpPost("login")]
     public async Task<ActionResult<AuthDto>> Login(LoginDto loginDto)
     {
         var tokens = await _authService.Login(loginDto);
-        if (tokens == null)
+        if (tokens.Data == null)
         {
             return Unauthorized("Invalid credentials");
         }
         
         var authDto = new AuthDto
         {
-            Token = tokens.Token,
-            RefreshToken = tokens.RefreshToken.Token
+            Token = tokens.Data.Token,
+            RefreshToken = tokens.Data.RefreshToken.Token
         };
         return Ok(authDto);
     }
@@ -48,14 +38,14 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<AuthDto>> RefreshToken(RefreshTokenDto refreshToken)
     {
         var tokens = await _authService.RefreshToken(refreshToken.RefreshToken);
-        if (tokens == null)
+        if (tokens.Data == null)
         {
             return Unauthorized("Refresh token not found");
         }
         var authDto = new AuthDto
         {
-            Token = tokens.Token,
-            RefreshToken = tokens.RefreshToken.Token
+            Token = tokens.Data.Token,
+            RefreshToken = tokens.Data.RefreshToken.Token
         };
         return Ok(authDto);
     }

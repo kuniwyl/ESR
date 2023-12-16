@@ -1,13 +1,13 @@
 import { ChangeEvent, useEffect } from 'react';
 import { Toast } from 'react-bootstrap';
 import { ButtonF, InputGroupText, InputUser } from '@/components/forms';
-import ElementRegisterDto from '@/model/ElementRegisterDto.ts';
+import SubjectDto from '@/domain/dtos/SubjectDto.ts';
 
 interface AddElementProps {
   type: string;
   name: string;
-  element: ElementRegisterDto;
-  setElement: (element: ElementRegisterDto) => void;
+  element: SubjectDto;
+  setElement: (element: SubjectDto) => void;
   dataSetList: Array<string>;
   setSelected: (e: ChangeEvent<HTMLInputElement>) => void;
   show: boolean;

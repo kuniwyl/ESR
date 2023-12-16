@@ -1,8 +1,7 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Navigation } from '@/components/ui';
-import { useAuth } from '@/store/slices/authSlice.ts';
 import { useEffect } from 'react';
-import { UserRoles } from '@/model/UserRoles.ts';
+import { UserRoles } from '@/domain/model/UserRoles.ts';
 
 const SystemAdminLayout = () => {
   const navigation = useNavigate();

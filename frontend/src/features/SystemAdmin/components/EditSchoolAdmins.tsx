@@ -1,18 +1,15 @@
 import Container from 'react-bootstrap/Container';
 import { Table } from 'react-bootstrap';
-import { UserResponse } from '@/model/AuthInterfaces.ts';
 import { ButtonF } from '@/components/forms';
-import CreateNewAdmin from '@/features/SystemAdmin/components/CreateNewAdmin.tsx';
 import { useState } from 'react';
-import DisplaySchoolAdmin from '@/features/SystemAdmin/components/DisplaySchoolAdmin.tsx';
 
 interface EditSchoolAdminsProps {
   schoolId: number;
-  schoolAdmins: UserResponse[];
+  schoolAdmins: UserDto[];
 }
 
 const EditSchoolAdmins = ({
-  schoolId,
+  // schoolId,
   schoolAdmins,
 }: EditSchoolAdminsProps) => {
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -21,13 +18,14 @@ const EditSchoolAdmins = ({
     setShowToast(!showToast);
   };
 
-  const renderSchoolAdmins = schoolAdmins.map(schoolAdmin => {
+  const renderSchoolAdmins = schoolAdmins.map(() => {
     return (
-      <DisplaySchoolAdmin
-        key={schoolAdmin.id}
-        schoolId={schoolId}
-        schoolAdmin={schoolAdmin}
-      />
+      // <DisplaySchoolAdmin
+      //   key={schoolAdmin.id}
+      //   schoolId={schoolId}
+      //   schoolAdmin={schoolAdmin}
+      // />
+      <></>
     );
   });
 
@@ -40,11 +38,11 @@ const EditSchoolAdmins = ({
         onClick={() => handleAdd()}
         size={'sm'}
       />
-      <CreateNewAdmin
-        schoolId={schoolId}
-        showToast={showToast}
-        setShowToast={setShowToast}
-      />
+      {/*<CreateNewAdmin*/}
+      {/*  schoolId={schoolId}*/}
+      {/*  showToast={showToast}*/}
+      {/*  setShowToast={setShowToast}*/}
+      {/*/>*/}
       <Table className="mt-3">
         <thead>
           <tr>

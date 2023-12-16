@@ -1,5 +1,5 @@
-import InputGroupText from './InputGroup';
-import ButtonF from './Button';
-import InputUser from '@/components/forms/InputUser';
+import InputGroupText from './inputGroup';
+import ButtonF from './button';
+import InputUser from './inputUser';
 
 export { InputGroupText, ButtonF, InputUser };

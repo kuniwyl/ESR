@@ -1,13 +1,11 @@
 import { Toast } from 'react-bootstrap';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { UserResponse } from '@/model/AuthInterfaces.ts';
-import { ButtonF, InputGroupText } from '@/components/forms';
-import { usePutSchoolAdminMutation } from '@/store/api/systemAdminSlice.ts';
+import { InputGroupText } from '@/components/forms';
 
 import '../styles/createNewAdmin.scss';
 
 interface CreateNewAdminProps {
-  schoolAdmin: UserResponse;
+  schoolAdmin: UserDto;
   schoolId: number;
   showToast: boolean;
   setShowToast: (value: boolean) => void;
@@ -15,13 +13,11 @@ interface CreateNewAdminProps {
 
 const EditSchoolAdmin = ({
   schoolAdmin,
-  schoolId,
+  // schoolId,
   showToast,
   setShowToast,
 }: CreateNewAdminProps) => {
-  const [putSchoolAdmin, { isLoading: isPosting }] =
-    usePutSchoolAdminMutation();
-  const [admin, setAdmin] = useState<UserResponse>(schoolAdmin);
+  const [admin, setAdmin] = useState<UserDto>(schoolAdmin);
   const [errors, setErrors] = useState<string>('');
 
   useEffect(() => {
@@ -30,21 +26,21 @@ const EditSchoolAdmin = ({
     }, 4000);
   }, [errors]);
 
-  const saveAdmin = async () => {
-    const res = await putSchoolAdmin({
-      schoolId: schoolId,
-      id: Number.parseInt(schoolAdmin.id),
-      schoolAdmin: admin,
-    })
-      .unwrap()
-      .catch(e => {
-        setErrors(e.data);
-        return false;
-      });
-    if (res) {
-      setShowToast(false);
-    }
-  };
+  // const saveAdmin = async () => {
+  // const res = await putSchoolAdmin({
+  //   schoolId: schoolId,
+  //   id: Number.parseInt(schoolAdmin.id),
+  //   schoolAdmin: admin,
+  // })
+  //   .unwrap()
+  //   .catch(e => {
+  //     setErrors(e.data);
+  //     return false;
+  //   });
+  // if (res) {
+  //   setShowToast(false);
+  // }
+  // };
 
   const setData = (e: ChangeEvent<HTMLInputElement>) => {
     setAdmin({
@@ -67,7 +63,7 @@ const EditSchoolAdmin = ({
         <InputGroupText
           type={'text'}
           name={'login'}
-          label={'Login'}
+          label={'login'}
           placeholder={'Podaj login'}
           value={admin.login}
           setValue={setData}
@@ -88,14 +84,14 @@ const EditSchoolAdmin = ({
           value={admin.lastName}
           setValue={setData}
         />
-        <ButtonF
-          variant={'dark'}
-          text={'Zapisz'}
-          isLoading={isPosting}
-          onClick={saveAdmin}
-          size={'sm'}
-          error={errors}
-        />
+        {/*<ButtonF*/}
+        {/*  variant={'dark'}*/}
+        {/*  text={'Zapisz'}*/}
+        {/*  isLoading={isPosting}*/}
+        {/*  onClick={saveAdmin}*/}
+        {/*  size={'sm'}*/}
+        {/*  error={errors}*/}
+        {/*/>*/}
       </Toast.Body>
     </Toast>
   );

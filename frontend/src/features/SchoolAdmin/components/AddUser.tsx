@@ -1,8 +1,8 @@
 import { Toast } from 'react-bootstrap';
 import { ButtonF, InputGroupText } from '@/components/forms';
-import RegisterDto from '@/model/RegisterDto.ts';
 import { ChangeEvent, useEffect } from 'react';
 import '../styles/addUser.scss';
+import RegisterDto from '@/domain/dtos/RegisterDto.ts';
 
 interface AddUserProps {
   type: string;
@@ -51,7 +51,7 @@ const AddUser = ({
         <InputGroupText
           type={'text'}
           name={'login'}
-          label={'Login'}
+          label={'login'}
           placeholder={'Wprowadź login'}
           value={user.login}
           setValue={setUserData}

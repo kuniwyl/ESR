@@ -1,9 +1,11 @@
 using Application.DB.DataContext;
 using Application.Dto;
+using Application.Exceptions;
 using Application.IServices;
-using Domain.Entities;
+using Application.IServices.Auth;
+using Domain.Entities_v2.Users;
+using Domain.IRepositories.Users;
 using Domain.Models;
-using Microsoft.EntityFrameworkCore;
 using Presentation.Utils;
 
 namespace Presentation.Services;
@@ -12,101 +14,103 @@ public class AuthService : IAuthService
 {
     private readonly SchoolContext _context;
     private readonly IConfiguration _configuration;
-    private readonly IUserService _userService;
+    private readonly IUserRepository _userRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     
-    public AuthService(SchoolContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IUserService userService)
+    public AuthService(SchoolContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
     {
         _context = context;
         _configuration = configuration;
-        _userService = userService;
         _httpContextAccessor = httpContextAccessor;
+        _userRepository = userRepository;
     }
     
-    public async Task<Tokens?> Login(LoginDto loginDto)
+    public async Task<ServiceResponse<Tokens>> Login(LoginDto loginDto)
     {
-        var user = await _userService.GetUser(loginDto.Login);
-        if (user == null)
+        try
         {
-            return null;
-        }
-        
-        if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
-        {
-            return null;
-        }
-        
-        var token = TokenUtil.CreateToken(user, _configuration);
-        var refreshToken = TokenUtil.GenerateRefreshToken();
-        
-        user.RefreshToken = refreshToken.Token;
-        user.RefreshTokenCreated = refreshToken.Created;
-        user.RefreshTokenExpires = refreshToken.Expires;
-        await _context.SaveChangesAsync();
+            var user = await _userRepository.GetByLogin(loginDto.Login);
 
-        var tokens = new Tokens
+            if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
+            {
+                throw new NotAuthorizedExceprion<Tokens>("Niepoprawne dane logowania");
+            }
+
+            var token = TokenUtil.CreateToken(user, _configuration);
+            var refreshToken = TokenUtil.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken.Token;
+            user.RefreshTokenCreated = refreshToken.Created;
+            user.RefreshTokenExpires = refreshToken.Expires;
+            await _context.SaveChangesAsync();
+
+            var tokens = new Tokens
+            {
+                Token = token,
+                RefreshToken = refreshToken,
+            };
+            return new ServiceResponse<Tokens>()
+            {
+                Data = tokens,
+                Message = "Zalogowano",
+                Success = true
+            };
+        }
+        catch (Exception e)
         {
-            Token = token,
-            RefreshToken = refreshToken,
-        };
-        return tokens;
+            return new ServiceResponse<Tokens>()
+            {
+                Data = null,
+                Message = e.Message,
+                Success = false
+            };
+        }
     }
 
-    public async Task<UserDto?> Register(RegisterSystemAdminDto registerDto)
+    public async Task<ServiceResponse<UserDto>> Register(RegisterDto registerDto)
     {
-        var userExist = await _context.SystemAdmins.AnyAsync(u => u.Login == registerDto.Login);
-        if (userExist)
-        {
-            return null;
-        }
-        
-        var passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
-        var systemAdmin = new SystemAdmin();
-        systemAdmin.Login = registerDto.Login;
-        systemAdmin.PasswordHash = passwordHash;
-        systemAdmin.FirstName = registerDto.FirstName;
-        systemAdmin.LastName = registerDto.LastName;
-        systemAdmin.Role = UserRole.SystemAdmin;
-        
-        await _context.AddAsync(systemAdmin);
-        await _context.SaveChangesAsync();
-
-        var userDto = new UserDto();
-        userDto.Id = systemAdmin.Id;
-        userDto.Login = systemAdmin.Login;
-        userDto.FirstName = systemAdmin.FirstName;
-        userDto.LastName = systemAdmin.LastName;
-        userDto.Role = systemAdmin.Role;
-        userDto.SchoolId = 0;
-        
-        return userDto;
+        throw new NotImplementedException();
     }
 
-    public async Task<Tokens?> RefreshToken(string refreshToken)
+    async Task<ServiceResponse<Tokens>> IAuthService.RefreshToken(string refreshToken)
     {
-        var user = await _userService.GetUserByRefreshToken(refreshToken);
-        if (user == null)
+        try
         {
-            return null;
+            var user = await _userRepository.GetByRefreshToken(refreshToken);
+        
+            if (user.RefreshTokenExpires < DateTime.UtcNow)
+            {
+                throw new ExpiredRefreshTokenException<User>("Refresh token wygasł");
+            }
+        
+            var token = TokenUtil.CreateToken(user, _configuration);
+            var newRefreshToken = TokenUtil.GenerateRefreshToken();
+        
+            user.RefreshToken = newRefreshToken.Token;
+            user.RefreshTokenCreated = newRefreshToken.Created;
+            user.RefreshTokenExpires = newRefreshToken.Expires;
+            await _context.SaveChangesAsync();
+        
+            var tokens = new Tokens
+            {
+                Token = token,
+                RefreshToken = newRefreshToken
+            };
+            return new ServiceResponse<Tokens>()
+            {
+                Data = tokens,
+                Message = "Odświeżono token",
+                Success = true
+            };
         }
-        
-        if (user.RefreshTokenExpires < DateTime.UtcNow)
+        catch (Exception e)
         {
-            return null;
+            return new ServiceResponse<Tokens>()
+            {
+                Data = null,
+                Message = e.Message,
+                Success = false
+            };
         }
-        
-        var token = TokenUtil.CreateToken(user, _configuration);
-        var newRefreshToken = TokenUtil.GenerateRefreshToken();
-        
-        user.RefreshToken = newRefreshToken.Token;
-        user.RefreshTokenCreated = newRefreshToken.Created;
-        user.RefreshTokenExpires = newRefreshToken.Expires;
-        await _context.SaveChangesAsync();
-        
-        return new Tokens
-        {
-            Token = token,
-            RefreshToken = newRefreshToken
-        };
     }
 }

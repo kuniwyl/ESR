@@ -1,68 +1,79 @@
+using System.Linq.Expressions;
 using Application.DB.DataContext;
 using Domain;
+using Domain.Exceptions;
 using Domain.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Presentation.Repositories;
 
 public abstract class RepositoryBase<T> : IRepository<T> where T : class, IEntityBase
 {
-    private readonly SchoolContext _context;
-
+    protected readonly SchoolContext _context;
+    
     protected RepositoryBase(SchoolContext context)
     {
-        this._context = context;
+        _context = context;
     }
     
     public async Task<T?> GetById(int id)
     {
-        try
+        var entity = await _context.Set<T>().FindAsync(id);
+        if (entity == null)
         {
-            var entity = await _context.Set<T>().FindAsync(id);
-            return entity;
-        } catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return null;
+            throw new ObjectNotFoundException<T>(id);
         }
+        return entity;
     }
 
     public async Task<IEnumerable<T>> GetAll()
     {
-        try
-        {
-            return _context.Set<T>();
-        } catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return new List<T>();
-        }
+        var entities = await _context.Set<T>().ToListAsync();
+        return entities;
     }
 
-    public async Task<bool> Add(T entity)
+    public async Task<IEnumerable<T>> GetWithPagination(int page, int size)
+    {
+        var entities = await _context.Set<T>().Skip((page - 1) * size).Take(size).ToListAsync();
+        return entities;
+    }
+
+    public async Task<IEnumerable<T>> GetWithExpression(Expression<Func<T, bool>> expression)
+    {
+        var entities = await _context.Set<T>().Where(expression).ToListAsync();
+        return entities;
+    }
+
+    public async Task<IEnumerable<T>> GetWithExpressionAndPagination(Expression<Func<T, bool>> expression, int page, int size)
+    {
+        var entities = await _context.Set<T>().Where(expression).Skip((page - 1) * size).Take(size).ToListAsync();
+        return entities;
+    }
+
+    public async Task<T> Add(T entity)
     {
         try
         {
-            _context.Set<T>().Add(entity);
+            var addedEntity = await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
-            return true;
+            return addedEntity.Entity;
         } catch (Exception e)
         {
-            Console.WriteLine(e);
-            return false;
+            throw new CreateFailedException<T>(entity, e);
         }
+        
     }
 
-    public async Task<bool> Update(T entity)
+    public async Task<T> Update(T entity)
     {
         try
         {
-            _context.Set<T>().Update(entity);
+            var updatedEntity = _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
-            return true;
+            return updatedEntity.Entity;
         } catch (Exception e)
         {
-            Console.WriteLine(e);
-            return false;
+            throw new SaveFailedException<T>(entity);
         }
     }
 
@@ -75,22 +86,7 @@ public abstract class RepositoryBase<T> : IRepository<T> where T : class, IEntit
             return true;
         } catch (Exception e)
         {
-            Console.WriteLine(e);
-            return false;
-        }
-    }
-
-    public async Task<bool> Edit(T entity)
-    {
-        try
-        {
-            _context.Set<T>().Update(entity);
-            await _context.SaveChangesAsync();
-            return true;
-        } catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
+            throw new DeleteFailedException<T>(entity);
         }
     }
 }
