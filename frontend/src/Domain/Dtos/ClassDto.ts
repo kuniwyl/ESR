@@ -1,10 +1,10 @@
-import UserShortDto from '@/domain/dtos/UserShortDto.ts';
-
 interface ClassDto {
   id: number;
   name: string;
   description: string;
-  teacher: UserShortDto;
+  nameId: string;
+  schoolId: number;
+  teacherId: number;
 }
 
 export default ClassDto;

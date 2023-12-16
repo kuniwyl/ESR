@@ -1,9 +1,9 @@
-interface SystemAdmin {
-  id: string;
+interface SystemAdminDto {
+  id: number;
   login: string;
   firstName: string;
   lastName: string;
   role: string;
 }
 
-export default SystemAdmin;
+export default SystemAdminDto;

@@ -1,11 +1,10 @@
-interface ParentDto {
-  id: number;
+interface CreateUserDto {
   login: string;
   firstName: string;
   lastName: string;
   role: string;
+  password: string;
   schoolId: number;
-  studentId: number;
 }
 
-export default ParentDto;
+export default CreateUserDto;

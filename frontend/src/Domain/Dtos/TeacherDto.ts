@@ -1,4 +1,4 @@
-interface UserDto {
+interface TeacherDto {
   id: number;
   login: string;
   firstName: string;
@@ -6,3 +6,5 @@ interface UserDto {
   role: string;
   schoolId: number;
 }
+
+export default TeacherDto;
