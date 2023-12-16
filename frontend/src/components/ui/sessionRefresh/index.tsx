@@ -18,7 +18,7 @@ const SessionRefresh = () => {
   //     );
   //   },
   // });
-  // const auth = useSelector<RootState>(state => state.auth) as AuthSliceState;
+  // const auth = useSelector<RootState>(context => context.auth) as AuthSliceState;
   // const dispatch = useDispatch();
   // const [timeLeft, setTimeLeft] = useState<number>(0);
   //

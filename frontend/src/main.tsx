@@ -8,7 +8,7 @@ import './Configuration/index.scss';
 import './Configuration/variables.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { AuthProvider } from '@/state/auth';
+import { AuthProvider } from '@/context/auth';
 export const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

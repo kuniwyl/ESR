@@ -17,7 +17,7 @@ import './navigation.scss';
 import SchoolAdminRequired from '@/features/schoolAdmin/components/SchoolAdminRequired.ts';
 import { ButtonF } from '@/components/forms';
 import { SessionRefresh } from '@/components/ui';
-import { useAuthContext } from '@/state/auth';
+import { useAuthContext } from '@/context/auth';
 
 const Navigation = () => {
   const { isAuth, logout } = useAuthContext();

@@ -21,7 +21,7 @@
 // import { RootState } from '@/store';
 
 const SchoolAdminLayout = () => {
-  // const auth = useSelector<RootState>(state => state.auth) as AuthSliceState;
+  // const auth = useSelector<RootState>(context => context.auth) as AuthSliceState;
   // const navigate = useNavigate();
   // const { data: schoolData, isLoading: isSchoolLoading } =
   //   useGetSchoolOwnQuery();

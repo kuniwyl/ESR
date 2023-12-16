@@ -1,6 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 
-interface IAuthState {
+export interface IAuthState {
   token: string | null;
   refreshToken: string | null;
   isAuth: boolean;
@@ -12,17 +12,9 @@ interface IAuthState {
 }
 
 interface TokenDecoded {
-  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
-  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name': string;
-  'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier': string;
-  exp: number;
-  schoolId: string;
-}
-
-interface TokenDecodedDispatched {
-  role: string;
-  name: string;
   id: string;
+  login: string;
+  role: string;
   exp: number;
   schoolId: string;
 }
@@ -38,25 +30,19 @@ const initialState: IAuthState = {
   role: null,
 };
 
-const decodeToken = (token: string): TokenDecodedDispatched => {
+const decodeToken = (token: string): TokenDecoded => {
   const decodedToken: TokenDecoded = jwtDecode(token);
   return {
-    role: decodedToken[
-      'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-    ],
-    name: decodedToken[
-      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
-    ],
-    id: decodedToken[
-      'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
-    ],
+    id: decodedToken.id,
+    login: decodedToken.login,
+    role: decodedToken.role,
     exp: decodedToken.exp,
     schoolId: decodedToken.schoolId,
   };
 };
 
 const getTokenData = (token: string, refreshToken: string): IAuthState => {
-  const decodedToken: TokenDecodedDispatched = decodeToken(token);
+  const decodedToken: TokenDecoded = decodeToken(token);
   if (decodedToken.exp * 1000 < Date.now()) {
     return initialState;
   }
@@ -68,7 +54,7 @@ const getTokenData = (token: string, refreshToken: string): IAuthState => {
     exp: decodedToken.exp,
     userId: parseInt(decodedToken.id),
     schoolId: Number.parseInt(decodedToken.schoolId),
-    userName: decodedToken.name,
+    userName: decodedToken.login,
     role: decodedToken.role,
   };
 };

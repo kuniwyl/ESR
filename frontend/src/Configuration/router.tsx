@@ -8,13 +8,6 @@ import {
   SYSTEM_ADMIN,
 } from '@/configuration/config.ts';
 import SystemAdminLayout from '@/features/systemAdmin/SystemAdminLayout.tsx';
-import {
-  authRepository,
-  systemAdminRepository,
-} from '@/configuration/appContext.ts';
-import SchoolsListPresenter from '@/features/systemAdmin/views/SchoolsListView/SchoolsListPresenter.ts';
-import CreateSchoolPresenter from '@/features/systemAdmin/views/CreateSchoolView/CreateSchoolPresenter.ts';
-import SchoolEditPresenter from '@/features/systemAdmin/views/SchoolEditView/SchoolEditPresenter.ts';
 
 const router = createBrowserRouter([
   {
