@@ -4,4 +4,5 @@ namespace Domain.IRepositories.SchoolRepositories;
 
 public interface ISchoolRepository : IRepository<School>
 {
+    Task<School> GetSchoolWithAdmins(int id);
 }

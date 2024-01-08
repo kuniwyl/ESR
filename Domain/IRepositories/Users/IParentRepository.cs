@@ -4,5 +4,5 @@ namespace Domain.IRepositories.Users;
 
 public interface IParentRepository: IRepository<Parent>
 {
-    
+    Task<Parent[]> GetParentsFromClass(int classId);
 }

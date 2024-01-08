@@ -6,6 +6,4 @@ public class Parent: SchoolUser
 {
     public int StudentId { get; set; }
     public virtual Student Student { get; set; } = null!;
-    
-    public new string Role { get; set; } = UserRole.Parent;
 }

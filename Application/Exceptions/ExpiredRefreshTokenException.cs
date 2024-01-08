@@ -1,10 +1,11 @@
+using Domain;
+using Domain.Exceptions;
+
 namespace Application.Exceptions;
 
-public class ExpiredRefreshTokenException<T>: AbstractException<T>
+public class ExpiredRefreshTokenException<T>: AbstractException where T : class
 {
-    public ExpiredRefreshTokenException(string message) 
+    public ExpiredRefreshTokenException() : base("Refresh token expired", "ExpiredRefreshTokenException", 401)
     {
-        Response.Message = message;
-        Response.Exception = GetType().Name;
     }
 }

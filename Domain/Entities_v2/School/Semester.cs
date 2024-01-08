@@ -1,10 +1,13 @@
+using Domain.Entities_v2.Types;
+
 namespace Domain.Entities_v2.School;
 
 public class Semester: IEntityBase
 {
     public int Id { get; set; }
-    public DateTime Created { get; set; }
+    public DateTime Created { get; set; } = DateTime.Now;
     public DateTime Updated { get; set; }
+    public Status Status { get; set; } = Status.Active;
     
     public string Name { get; set; } = null!;
     public DateTime StartDate { get; set; }
@@ -14,12 +17,12 @@ public class Semester: IEntityBase
     public int LessonDuration { get; set; }
     public int BreakDuration { get; set; }
     
-    public TimeSpan LessonStart { get; set; }
+    public string LessonStart { get; set; }
     
     public int SchoolId { get; set; }
     public School School { get; set; } = null!;
     
-    public virtual List<Subject> Subjects { get; set; } = new List<Subject>();
+    public virtual List<ClassSubjectSemester> ClassSubjectSemesters { get; set; } = new List<ClassSubjectSemester>();
     public virtual List<Notice> Notices { get; set; } = new List<Notice>();
     public virtual List<ClassNotice> ClassNotices { get; set; } = new List<ClassNotice>();
 }

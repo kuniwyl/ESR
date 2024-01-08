@@ -4,7 +4,7 @@ interface NoticeDto extends EntityBase {
   title: string;
   content: string;
   semesterId: number;
-  days: number;
+  day: string;
   slot: number;
 }
 

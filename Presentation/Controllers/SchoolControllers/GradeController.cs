@@ -16,4 +16,21 @@ public class GradeController: BaseController<GradeDto, Grade>
     {
     }
     
+    [HttpPost]
+    public new async Task<IActionResult> Create(GradeDto entity)
+    {
+        return await base.Create(entity);
+    } 
+    
+    [HttpPut("{id}")]
+    public new async Task<IActionResult> Update(int id, GradeDto entity)
+    {
+        return await base.Update(id, entity);
+    }
+    
+    [HttpDelete("{id}")]
+    public new async Task<IActionResult> Delete(int id)
+    {
+        return await base.Delete(id);
+    }
 }

@@ -49,4 +49,26 @@ public class AuthController : ControllerBase
         };
         return Ok(authDto);
     }
+    
+    [HttpGet("user/{id}")]
+    public async Task<ActionResult<UserDto>> GetUser(int id)
+    {
+        var user = await _authService.GetUser(id);
+        if (user.Data == null)
+        {
+            return NotFound("User not found");
+        }
+        return Ok(user.Data);
+    }
+    
+    [HttpPut("user/{id}/reset-password")]
+    public async Task<ActionResult> ResetPassword(int id, ResetPasswordDto resetPasswordDto)
+    {
+        var result = await _authService.ResetPassword(id, resetPasswordDto.newPassword);
+        if (!result.Success)
+        {
+            return BadRequest(result.Message);
+        }
+        return Ok(result.Message);
+    }
 }

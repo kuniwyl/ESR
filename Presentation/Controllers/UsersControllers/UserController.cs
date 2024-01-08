@@ -14,10 +14,15 @@ public abstract class UserController<TDto, TEntity> : BaseController<TDto, TEnti
     {
     }
     
-    [HttpPost("create")]
+    // [HttpPost("create")]
+    [NonAction]
     public async Task<IActionResult> Create(CreateUserDto dto)
     {
         var result = await Service.Add(dto);
+        if (!result.Success)
+        {
+            return BadRequest(result.Message);
+        } 
         return Ok(result);
     }
 }

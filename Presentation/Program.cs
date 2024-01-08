@@ -5,11 +5,13 @@ using Application.IServices.Auth;
 using Application.IServices.School;
 using Application.IServices.Users;
 using Domain.Entities_v2.Users;
+using Domain.IRepositories;
 using Domain.IRepositories.SchoolRepositories;
 using Domain.IRepositories.Users;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Presentation.Middelware;
 using Presentation.Repositories;
 using Presentation.Repositories.SchoolRepositories;
 using Presentation.Repositories.UsersRepositories;
@@ -22,6 +24,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //////////////////////// Repositories ////////////////////////
 // School
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IBehaviourGradeRepository, BehaviourGradeRepository>();
 builder.Services.AddScoped<IClassNoticeRepository, ClassNoticeRepository>();
@@ -31,6 +34,10 @@ builder.Services.AddScoped<INoticeRepository, NoticeRepository>();
 builder.Services.AddScoped<ISchoolRepository, SchoolRepository>();
 builder.Services.AddScoped<ISemesterRepository, SemesterRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ICssRepository, CssRepository>();
+builder.Services.AddScoped<ICssInstanceRepository, CssInstanceRepository>();
+builder.Services.AddScoped<ILessonRepository, LessonRepository>();
+builder.Services.AddScoped<IPresenceRepository, PresenceRepository>();
 // Users
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
@@ -38,6 +45,8 @@ builder.Services.AddScoped<IParentRepository, ParentRepository>();
 builder.Services.AddScoped<ISchoolAdminRepository, SchoolAdminRepository>();
 builder.Services.AddScoped<ISystemAdminRepository, SystemAdminRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+// Other
+builder.Services.AddScoped<IExistRepository, ExistRepository>();
 
 //////////////////////// Services ////////////////////////
 // School
@@ -50,6 +59,10 @@ builder.Services.AddScoped<INoticeService, NoticeService>();
 builder.Services.AddScoped<ISchoolService, SchoolService>();
 builder.Services.AddScoped<ISemesterService, SemesterService>();
 builder.Services.AddScoped<ISubjectService, SubjectService>();
+builder.Services.AddScoped<ICssService, CssService>();
+builder.Services.AddScoped<ICssInstanceService, CssInstanceService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IPresenceService, PresenceService>();
 // Users
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();
@@ -113,7 +126,7 @@ builder.Services.AddSwaggerGen(options =>
     options.MapType<TimeSpan>(() => new OpenApiSchema
     {
         Type = "string",
-        Example = new OpenApiString("00:00:00")
+        Example = new OpenApiString("00:00")
     });
 });
 
@@ -130,6 +143,7 @@ app.UseHttpsRedirection();
 app.UseCors("Open");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<CatcherMiddleware>();
 
 app.MapControllers();
 

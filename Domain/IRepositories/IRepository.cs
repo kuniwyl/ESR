@@ -4,6 +4,7 @@ namespace Domain.IRepositories;
 
 public interface IRepository<T> where T : IEntityBase
 {
+    Task<bool> Exists(int id);
     Task<T?> GetById(int id);
     Task<IEnumerable<T>> GetAll();
     Task<IEnumerable<T>> GetWithPagination(int page, int size);
@@ -12,4 +13,5 @@ public interface IRepository<T> where T : IEntityBase
     Task<T> Add(T entity);
     Task<T> Update(T entity);
     Task<bool> Delete(T entity);
+    Task<bool> SaveChanges();
 }

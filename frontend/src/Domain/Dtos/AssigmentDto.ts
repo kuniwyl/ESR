@@ -4,7 +4,7 @@ import GradeDto from '@/domain/dtos/GradeDto.ts';
 interface AssigmentDto extends EntityBase {
   name: string;
   description: string;
-  subjectId: number;
+  classSubjectSemesterId: number;
   grades: GradeDto[];
 }
 

@@ -1,15 +1,18 @@
+using Domain.Entities_v2.Types;
+
 namespace Application.Dto.School;
 
-public class NoticeDto
+public class NoticeDto: IBaseDto
 {
     public int Id { get; set; }
     public DateTime Created { get; set; }
     public DateTime Updated { get; set; }
+    public Status Status { get; set; }
     
     public string Title { get; set; } = null!;
     public string Content { get; set; } = null!;
     
     public int SemesterId { get; set; }
-    public int? Days { get; set; }
+    public DateOnly Date { get; set; }
     public int? Slot { get; set; }
 }

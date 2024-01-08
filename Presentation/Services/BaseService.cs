@@ -1,185 +1,150 @@
 using System.Linq.Expressions;
+using Application.Dto;
+using Application.Dto.School;
 using Application.Exceptions;
 using Application.IServices;
 using AutoMapper;
 using Domain;
+using Domain.Entities_v2.Types;
+using Domain.Entities_v2.Users;
 using Domain.Exceptions;
 using Domain.IRepositories;
+using Domain.Models;
 
 namespace Presentation.Services;
 
-public abstract class BaseService<TDto, TModel> : IBaseService<TDto, TModel> where TDto : class where TModel : class, IEntityBase
+public abstract class BaseService<TDto, TModel> : IBaseService<TDto, TModel> where TDto : class, IBaseDto where TModel : class, IEntityBase
 {
     protected readonly IRepository<TModel> _repository;
+    protected readonly IExistRepository _existRepository;
     protected readonly IMapper _mapper;
+    protected readonly IHttpContextAccessor _contextAccessor;
     
-    protected BaseService(IRepository<TModel> repository, IMapper mapper)
+    protected BaseService(IRepository<TModel> repository, IMapper mapper, IExistRepository existRepository, IHttpContextAccessor contextAccessor)
     {
         this._repository = repository;
         this._mapper = mapper;
+        this._existRepository = existRepository;
+        this._contextAccessor = contextAccessor;
     }
     
     public async Task<ServiceResponse<TDto[]>> GetAll()
     {
-        try {
-            var entities = await _repository.GetAll();
-            var dtos = _mapper.Map<TDto[]>(entities);
-            return new ServiceResponse<TDto[]>
-            {
-                Success = true,
-                Message = $"",
-                Data = dtos
-            };
-        } catch (Exception e)
+        var entities = await _repository.GetAll();
+        var dtos = _mapper.Map<TDto[]>(entities);
+        return new ServiceResponse<TDto[]>
         {
-            return new MapperException<TDto[]>(typeof(TModel[]).Name).Response;
-        }
+            Success = true,
+            Message = $"",
+            Data = dtos
+        };
     }
 
     public async Task<ServiceResponse<TDto[]>> GetWithPagination(int page, int size)
     {
-        try
+        var entities = await _repository.GetWithPagination(page, size);
+        var dtos = _mapper.Map<TDto[]>(entities);
+        return new ServiceResponse<TDto[]>
         {
-            var entities = await _repository.GetWithPagination(page, size);
-            var dtos = _mapper.Map<TDto[]>(entities);
-            return new ServiceResponse<TDto[]>
-            {
-                Success = true,
-                Message = $"",
-                Data = dtos
-            };
-        } catch (Exception e)
-        {
-            return new MapperException<TDto[]>(typeof(TModel[]).Name).Response;
-        }
-    }
-
-    public async Task<ServiceResponse<TDto[]>> GetWithExpression(Expression<Func<TModel, bool>> expression)
-    {
-        try
-        {   
-            var entities = await _repository.GetWithExpression(_mapper.Map<Expression<Func<TModel, bool>>>(expression));
-            var dtos = _mapper.Map<TDto[]>(entities);
-            return new ServiceResponse<TDto[]>
-            {
-                Success = true,
-                Message = $"",
-                Data = dtos
-            };
-        }
-        catch (Exception e)
-        {
-            return new MapperException<TDto[]>(typeof(TModel[]).Name).Response;
-        }
-    }
-
-    public async Task<ServiceResponse<TDto[]>> GetWithExpressionAndPagination(Expression<Func<TModel, bool>> expression, int page, int size)
-    {
-        try
-        {
-            var entities = await _repository.GetWithExpressionAndPagination(_mapper.Map<Expression<Func<TModel, bool>>>(expression), page, size);
-            var dtos = _mapper.Map<TDto[]>(entities);
-            return new ServiceResponse<TDto[]>
-            {
-                Success = true,
-                Message = $"",
-                Data = dtos
-            };
-        }
-        catch (Exception e)
-        {
-            return new MapperException<TDto[]>(typeof(TModel[]).Name).Response;
-        }
+            Success = true,
+            Message = $"",
+            Data = dtos
+        };
     }
 
     public async Task<ServiceResponse<TDto>> Get(int id)
     {
-        try {
-            var entity = await _repository.GetById(id);
-            var dto = _mapper.Map<TDto>(entity);
-            return new ServiceResponse<TDto>
-            {
-                Success = true,
-                Message = $"",
-                Data = dto
-            };
-        } catch (ObjectNotFoundException<TModel> e)
+        var entity = await _repository.GetById(id);
+        var dto = _mapper.Map<TDto>(entity);
+     
+        if (!await Authorize(dto))
         {
-            return new RepositoryException<TDto>(e).Response;
-        } catch (Exception e)
-        {
-            return new MapperException<TDto>(typeof(TModel).Name).Response;
+            throw new NotAuthorizedException<Teacher>("You are not authorized to do this action");
         }
+        
+        return new ServiceResponse<TDto>
+        {
+            Success = true,
+            Message = $"",
+            Data = dto
+        };
     }
 
     public virtual async Task<ServiceResponse<TDto>> Add(TDto entity)
     {
-        try
+        if (!await Authorize(entity))
         {
-            var model = _mapper.Map<TModel>(entity);
-            var addedEntity = await _repository.Add(model);
-            var dto = _mapper.Map<TDto>(addedEntity);
-            return new ServiceResponse<TDto>
-            {
-                Success = true,
-                Message = $"",
-                Data = dto
-            };
-        } catch (CreateFailedException<TModel> e)
-        {
-            return new RepositoryException<TDto>(e).Response;
-        } catch (Exception e)
-        {
-            return new MapperException<TDto>(typeof(TModel).Name).Response;
+            throw new NotAuthorizedException<Teacher>("You are not authorized to do this action");
         }
+        
+        var model = _mapper.Map<TModel>(entity);
+        var addedEntity = await _repository.Add(model);
+        await _repository.SaveChanges();
+        var dto = _mapper.Map<TDto>(addedEntity);
+        return new ServiceResponse<TDto>
+        {
+            Success = true,
+            Message = $"",
+            Data = dto
+        };
     }
 
-    public async Task<ServiceResponse<TDto>> Update(TDto entity)
+    public async Task<ServiceResponse<TDto>> Update(int id, TDto entity)
     {
-        try
+        if (id != entity.Id)
         {
-            var model = _mapper.Map<TModel>(entity);
-            var updatedEntity = await _repository.Update(model);
-            var dto = _mapper.Map<TDto>(updatedEntity);
-            return new ServiceResponse<TDto>
-            {
-                Success = true,
-                Message = $"",
-                Data = dto
-            };
-        } catch (SaveFailedException<TModel> e)
-        {
-            return new RepositoryException<TDto>(e).Response;
-        } catch (Exception e)
-        {
-            return new MapperException<TDto>(typeof(TModel).Name).Response;
+            throw new ValidationException<TDto>("Id is not valid");
         }
+        
+        if (!await Authorize(entity))
+        {
+            throw new NotAuthorizedException<Teacher>("You are not authorized to do this action");
+        }
+        
+        var model = await _repository.GetById(id);
+        if (model == null)
+        {
+            throw new ObjectNotFoundException<TModel>(id);
+        }
+        
+        _mapper.Map(entity, model);
+        var updatedEntity = await _repository.Update(model);
+        await _repository.SaveChanges();
+        
+        Console.WriteLine("update entity");
+        var dto = _mapper.Map<TDto>(updatedEntity);
+        
+        return new ServiceResponse<TDto>
+        {
+            Success = true,
+            Message = $"",
+            Data = dto
+        };
     }
 
     public async Task<ServiceResponse<bool>> Delete(int id)
     {
-        try
+        var entity = await _repository.GetById(id);
+        if (entity == null)
         {
-            var entity = await _repository.GetById(id);
-            var deleted = await _repository.Delete(entity);
-            return new ServiceResponse<bool>
-            {
-                Success = true,
-                Message = $"",
-                Data = deleted
-            };
+            throw new ObjectNotFoundException<TModel>(id);
         }
-        catch (ObjectNotFoundException<TModel> e)
+        
+        if (!await Authorize(_mapper.Map<TDto>(entity)))
         {
-            return new RepositoryException<bool>(e).Response;
+            throw new NotAuthorizedException<Teacher>("You are not authorized to do this action");
         }
-        catch (DeleteFailedException<TModel> e)
+        
+        var deleted = await _repository.Delete(entity);
+        await _repository.SaveChanges();
+        return new ServiceResponse<bool>
         {
-            return new RepositoryException<bool>(e).Response;
-        }  
-        catch (Exception e)
-        {
-            return new MapperException<bool>(typeof(TModel).Name).Response;
-        }
+            Success = true,
+            Message = $"",
+            Data = deleted
+        };
     }
+    
+    public abstract void Validate(TDto entity);
+    public abstract Task<bool> Authorize(TDto entity);
 }

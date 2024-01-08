@@ -2,80 +2,86 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  LOGIN,
-  SHOW_CLASSES,
-  SHOW_PARENTS,
-  SHOW_SCHOOLS,
-  SHOW_STUDENTS,
-  SHOW_SUBJECTS,
-  SHOW_TEACHERS,
-} from '@/configuration/config.ts';
-import SystemAdminRequired from '@/features/systemAdmin/components/SystemAdminRequired.ts';
-
-import './navigation.scss';
-import SchoolAdminRequired from '@/features/schoolAdmin/components/SchoolAdminRequired.ts';
-import { ButtonF } from '@/components/forms';
-import { SessionRefresh } from '@/components/ui';
-import { useAuthContext } from '@/context/auth';
+import { ROUTES } from '@/configuration/config.ts';
+import SchoolAdminRequired from '@/features/layouts/SchoolAdminRequired.ts';
+import SystemAdminRequired from '@/features/layouts/SystemAdminRequired.ts';
+import { useContext } from 'react';
+import { authContext } from '@/context/auth';
+import TeacherRequired from '@/features/layouts/TeacherRequired.ts';
+import SessionRefresh from '@/features/auth/refreshToken/SessionRefresh.tsx';
 
 const Navigation = () => {
-  const { isAuth, logout } = useAuthContext();
+  const { authState, logout } = useContext(authContext);
   const navigation = useNavigate();
 
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" data-bs-theme="dark" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">ESR</Navbar.Brand>
+        <Navbar.Brand>ESR</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto navElements">
             <SystemAdminRequired>
               <>
-                <Link className={'nav-link me-2'} to={SHOW_SCHOOLS}>
+                <Link className={'nav-link me-2'} to={ROUTES.SHOW_SCHOOLS()}>
                   Szkoły
+                </Link>
+                <Link className={'nav-link me-2'} to={ROUTES.SYSTEM_ADMINS()}>
+                  Administratorzy systemu
                 </Link>
               </>
             </SystemAdminRequired>
 
             <SchoolAdminRequired>
               <>
-                <Link className={'nav-link me-2'} to={SHOW_CLASSES}>
+                <Link className={'nav-link me-2'} to={ROUTES.SEMESTERS_SHOW()}>
+                  Semestry
+                </Link>
+                <Link className={'nav-link me-2'} to={ROUTES.CLASSES_SHOW()}>
                   Klasy
                 </Link>
-                <Link className={'nav-link me-2'} to={SHOW_SUBJECTS}>
-                  Przedmioty
-                </Link>
-                <Link className={'nav-link me-2'} to={SHOW_STUDENTS}>
-                  Uczniowie
-                </Link>
-                <Link className={'nav-link me-2'} to={SHOW_TEACHERS}>
+                <Link className={'nav-link me-2'} to={ROUTES.TEACHERS_SHOW()}>
                   Nauczyciele
                 </Link>
-                <Link className={'nav-link me-2'} to={SHOW_PARENTS}>
-                  Rodzice
+                <Link className={'nav-link me-2'} to={ROUTES.SUBJECTS_SHOW()}>
+                  Przedmioty
                 </Link>
               </>
             </SchoolAdminRequired>
 
-            {!isAuth ? (
-              <Link className={'nav-link'} to={LOGIN}>
-                Zaloguj się
-              </Link>
+            <TeacherRequired>
+              <>
+                <Link className={'nav-link me-2'} to={ROUTES.TEACHER_MAIN()}>
+                  Home
+                </Link>
+                <Link
+                  className={'nav-link me-2'}
+                  to={ROUTES.TEACHER_SUBJECTS()}
+                >
+                  Przedmioty
+                </Link>
+              </>
+            </TeacherRequired>
+
+            {!authState.isAuth ? (
+              <>
+                <Link className={'nav-link'} to={ROUTES.LOGIN()}>
+                  Zaloguj się
+                </Link>
+              </>
             ) : (
               <>
                 <SessionRefresh />
-                <ButtonF
-                  text={'Wyloguj się'}
-                  variant={'dark'}
-                  isLoading={false}
+                <button
+                  className="btn btn-dark"
                   onClick={() => {
                     logout();
-                    navigation(LOGIN);
+                    navigation(ROUTES.LOGIN());
                   }}
-                  size={'sm'}
-                />
+                >
+                  Wyloguj się
+                </button>
               </>
             )}
           </Nav>

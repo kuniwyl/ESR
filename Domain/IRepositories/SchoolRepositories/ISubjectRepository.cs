@@ -4,5 +4,5 @@ namespace Domain.IRepositories.SchoolRepositories;
 
 public interface ISubjectRepository: IRepository<Subject>
 {
-    Task<Subject[]> GetSubjectsByStudentId(int semesterId, int studentId);
+    Task<Subject[]> GetSubjectsBySchool(int schoolId);
 }

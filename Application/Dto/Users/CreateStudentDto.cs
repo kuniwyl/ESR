@@ -1,6 +1,7 @@
 namespace Application.Dto.Users;
 
-public class CreateStudentDto: CreateUserDto
+public class CreateStudentDto: StudentDto
 {
-    public int ClassId { get; set; }
+    public string Password { get; set; } = "";
+    public new CreateParentDto Parent { get; set; } = null!;
 }

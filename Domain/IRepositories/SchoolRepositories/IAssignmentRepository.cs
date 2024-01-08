@@ -4,5 +4,5 @@ namespace Domain.IRepositories.SchoolRepositories;
 
 public interface IAssignmentRepository: IRepository<Assignment>
 {
-    
+    Task<Assignment[]?> GetByCssId(int cssId);
 }

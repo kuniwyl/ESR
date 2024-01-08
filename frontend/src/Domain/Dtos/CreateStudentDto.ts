@@ -1,11 +1,9 @@
-interface CreateStudentDto {
-  login: string;
-  firstName: string;
-  lastName: string;
-  role: string;
+import StudentDto from '@/domain/dtos/StudentDto.ts';
+import CreateParentDto from '@/domain/dtos/CreateParentDto.ts';
+
+interface CreateStudentDto extends StudentDto {
+  parent: CreateParentDto;
   password: string;
-  schoolId: number;
-  classId: number;
 }
 
 export default CreateStudentDto;

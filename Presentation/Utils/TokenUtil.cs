@@ -16,9 +16,9 @@ public static class TokenUtil
     {
         var claims = new List<Claim>
         {
-            new Claim("Id", user.Id.ToString()),
-            new Claim("Login", user.Login),
-            new Claim("Role", user.Role),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new("Login", user.Login),
+            new(ClaimTypes.Role, user.Role),
         };
 
         if (user is SchoolUser schoolUser)

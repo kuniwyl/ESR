@@ -1,0 +1,22 @@
+.input {
+    min-width: 300px;
+
+    label {
+        text-indent: 5px;
+        margin-bottom: 2px;
+    }
+
+    .error {
+        font-size: 15px;
+        color: var(--red);
+        text-indent: 15px;
+    }
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+.toast {
+    position: absolute;
+}

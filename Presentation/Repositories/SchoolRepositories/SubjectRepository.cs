@@ -1,5 +1,6 @@
 using Application.DB.DataContext;
 using Domain.Entities_v2.School;
+using Domain.Entities_v2.Types;
 using Domain.IRepositories.SchoolRepositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +12,20 @@ public class SubjectRepository: RepositoryBase<Subject>, ISubjectRepository
     {
     }
 
-    public async Task<Subject[]> GetSubjectsByStudentId(int semesterId, int studentId)
+    public new Task<Subject?> GetById(int id)
     {
-        var subjects = await _context.Subjects
-            .Include(s => s.Assignments)
-            .Include(s => s.Class)
-            .Where(s => s.SemesterId == semesterId)
-            .Where(su => su.Class.Students.Any(s => s.Id == studentId)).ToListAsync();
-        return subjects.ToArray();
+        return _context.Subjects
+            .Where(s => s.Status != Status.Deleted)
+            .Include(s => s.Teacher)
+            .FirstOrDefaultAsync(s => s.Id == id);
+    }
+
+    public async Task<Subject[]> GetSubjectsBySchool(int schoolId)
+    {
+        return await _context.Subjects
+            .Where(s => s.SchoolId == schoolId)
+            .Where(s => s.Status != Status.Deleted)
+            .Include(s => s.Teacher)
+            .ToArrayAsync();
     }
 }

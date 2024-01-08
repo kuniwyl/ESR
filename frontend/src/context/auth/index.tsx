@@ -3,7 +3,7 @@ import {
   REFRESH_TOKEN_NAMESPACE,
   TOKEN_NAMESPACE,
 } from '@/utils/HeaderGetter.ts';
-import { createContext, JSX, useContext, useEffect, useState } from 'react';
+import { createContext, JSX, useEffect, useState } from 'react';
 
 const useAuthState = () => {
   const [authState, setAuthState] = useState(getInitialState());
@@ -18,22 +18,27 @@ const useAuthState = () => {
 
   const setAuthData = (tokenNew: string, refreshTokenNew: string) => {
     const decodedToken = getTokenData(tokenNew, refreshTokenNew);
+    console.log(decodedToken);
     if (decodedToken == null) {
       return;
     }
 
     if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
       setAuthState(getInitialState());
+      localStorage.removeItem(TOKEN_NAMESPACE);
+      localStorage.removeItem(REFRESH_TOKEN_NAMESPACE);
       return;
     }
 
+    localStorage.setItem(TOKEN_NAMESPACE, tokenNew);
+    localStorage.setItem(REFRESH_TOKEN_NAMESPACE, refreshTokenNew);
     setAuthState(decodedToken);
   };
 
   const logout = () => {
-    setAuthState(getInitialState());
     localStorage.removeItem(TOKEN_NAMESPACE);
     localStorage.removeItem(REFRESH_TOKEN_NAMESPACE);
+    setAuthState(getInitialState());
   };
 
   return {
@@ -45,7 +50,7 @@ const useAuthState = () => {
 
 type AuthContextType = ReturnType<typeof useAuthState>;
 
-const authContext = createContext({} as AuthContextType);
+export const authContext = createContext({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const auth = useAuthState();
@@ -62,5 +67,3 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     </authContext.Provider>
   );
 };
-
-export const useAuthContext = () => useContext(authContext);

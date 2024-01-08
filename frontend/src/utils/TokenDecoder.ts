@@ -12,11 +12,11 @@ export interface IAuthState {
 }
 
 interface TokenDecoded {
-  id: string;
-  login: string;
-  role: string;
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role': string;
+  Login: string;
+  Id: string;
   exp: number;
-  schoolId: string;
+  SchoolId: string;
 }
 
 const initialState: IAuthState = {
@@ -30,19 +30,8 @@ const initialState: IAuthState = {
   role: null,
 };
 
-const decodeToken = (token: string): TokenDecoded => {
-  const decodedToken: TokenDecoded = jwtDecode(token);
-  return {
-    id: decodedToken.id,
-    login: decodedToken.login,
-    role: decodedToken.role,
-    exp: decodedToken.exp,
-    schoolId: decodedToken.schoolId,
-  };
-};
-
 const getTokenData = (token: string, refreshToken: string): IAuthState => {
-  const decodedToken: TokenDecoded = decodeToken(token);
+  const decodedToken: TokenDecoded = jwtDecode(token);
   if (decodedToken.exp * 1000 < Date.now()) {
     return initialState;
   }
@@ -52,10 +41,12 @@ const getTokenData = (token: string, refreshToken: string): IAuthState => {
     refreshToken: refreshToken,
     isAuth: true,
     exp: decodedToken.exp,
-    userId: parseInt(decodedToken.id),
-    schoolId: Number.parseInt(decodedToken.schoolId),
-    userName: decodedToken.login,
-    role: decodedToken.role,
+    userId: parseInt(decodedToken.Id),
+    schoolId: Number.parseInt(decodedToken.SchoolId),
+    userName: decodedToken.Login,
+    role: decodedToken[
+      'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+    ],
   };
 };
 

@@ -5,7 +5,7 @@ interface ClassNoticeDto extends EntityBase {
   content: string;
   classId: number;
   semesterId: number;
-  days: number;
+  day: string;
   slot: number;
 }
 

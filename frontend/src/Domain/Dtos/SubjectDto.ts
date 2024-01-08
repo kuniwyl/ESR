@@ -3,11 +3,9 @@ import EntityBase from '@/domain/EntityBase.ts';
 interface SubjectDto extends EntityBase {
   name: string;
   description: string;
-  semesterId: number;
-  day: number;
-  slot: number;
+  teacherName?: string;
   teacherId: number;
-  classId: number;
+  schoolId: number;
 }
 
 export default SubjectDto;

@@ -1,15 +1,18 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Navigation } from '@/components/ui';
-import { useEffect } from 'react';
-import { UserRoles } from '@/domain/model/UserRoles.ts';
+import { useContext, useEffect } from 'react';
+import { UserRole } from '@/domain/UserRole.ts';
+import { authContext } from '@/context/auth';
+import { ROUTES } from '@/configuration/config.ts';
+import VInfo from '@/features/info/VInfo.tsx';
 
 const SystemAdminLayout = () => {
   const navigation = useNavigate();
-  const auth = useAuth();
+  const { authState } = useContext(authContext);
 
   useEffect(() => {
-    if (!auth.isAuth && auth.role !== UserRoles.SYSTEM_ADMIN) {
-      navigation('/login');
+    if (!authState.isAuth && authState.role !== UserRole.SYSTEM_ADMIN) {
+      navigation(ROUTES.LOGIN());
     }
   }, []);
 
@@ -17,6 +20,7 @@ const SystemAdminLayout = () => {
     <div>
       <Navigation />
       <Outlet />
+      <VInfo />
     </div>
   );
 };

@@ -6,6 +6,7 @@ interface GradeDto extends EntityBase {
   description: string;
   assigmentId: number;
   studentId: number;
+  studentName?: string;
 }
 
 export default GradeDto;

@@ -1,9 +1,9 @@
 enum Days {
-  Monday = 1,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
+  Poniedziałek = 1,
+  Wtorek,
+  Środa,
+  Czwartek,
+  Piątek,
 }
 
 export default Days;

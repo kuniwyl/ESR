@@ -56,3 +56,14 @@ C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Scrutor.dll
 C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.dll
 C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
 C:\Users\jakub\Documents\ESR\Presentation\obj\Debug\net8.0\Presentation.sourcelink.json
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\System.Text.Encodings.Web.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\System.Text.Json.dll
+C:\Users\jakub\Documents\ESR\Presentation\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll

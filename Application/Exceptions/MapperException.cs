@@ -1,9 +1,11 @@
+using Domain;
+using Domain.Exceptions;
+
 namespace Application.Exceptions;
 
-public class MapperException<T> : AbstractException<T> 
+public class MapperException<T> : AbstractException where T : class, IEntityBase 
 {
-    public MapperException(string model) : base() {
-        var message = $"MapperException: cannot map from {typeof(T)} to {model}";
-        base.Response.Message = message;
+    public MapperException(string message, Exception? exception) : base(message, "MapperException", 500)
+    {
     }
 }
