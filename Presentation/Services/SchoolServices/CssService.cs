@@ -1,4 +1,6 @@
+using Application.Dto;
 using Application.Dto.School;
+using Application.Dto.Users;
 using Application.Dto.Users.Grades;
 using Application.Exceptions;
 using Application.IServices;
@@ -21,12 +23,16 @@ public class CssService: BaseService<ClassSubjectSemesterDto, ClassSubjectSemest
     private readonly ISemesterRepository _semesterRepository;
     private readonly IClassRepository _classRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IGradeRepository _gradeRepository;
+    private readonly ILessonRepository _lessonRepository;
     
-    public CssService(ICssRepository repository, IUserRepository userRepository, IMapper mapper, IExistRepository existRepository, IHttpContextAccessor contextAccessor, IClassRepository classRepository, ISemesterRepository semesterRepository) : base(repository, mapper, existRepository, contextAccessor)
+    public CssService(ICssRepository repository, IUserRepository userRepository, IGradeRepository gradeRepository, ILessonRepository lessonRepository, IMapper mapper, IExistRepository existRepository, IHttpContextAccessor contextAccessor, IClassRepository classRepository, ISemesterRepository semesterRepository) : base(repository, mapper, existRepository, contextAccessor)
     {
         _classRepository = classRepository;
         _userRepository = userRepository;
         _semesterRepository = semesterRepository;
+        _gradeRepository = gradeRepository;
+        _lessonRepository = lessonRepository;
     }
  
     public async Task<ServiceResponse<ClassSubjectSemesterDto[]>> GetCssFromClassAndSemester(int classId, int semesterId)
@@ -58,9 +64,12 @@ public class CssService: BaseService<ClassSubjectSemesterDto, ClassSubjectSemest
         var userId = _contextAccessor.GetUserId();
         var schoolId = _contextAccessor.GetSchoolId();
         var semseterId = await _semesterRepository.GetSemesterCurrentSemester(schoolId);
-        if (semseterId == null) throw new ValidationException<ClassSubjectSemesterDto>("Semester not found");
         var user = await _userRepository.GetById(IntegerType.FromString(userId));
-        if (user == null) throw new ValidationException<ClassSubjectSemesterDto>("User not found");
+        
+        if (semseterId == null) throw new ValidationException<SemesterDto>("Semester not found");
+        if (user == null) throw new ValidationException<UserDto>("User not found");
+        
+        Console.WriteLine(user.Role);
         if (user.Role == UserRole.Teacher)
         {
             var css = await ((ICssRepository) _repository).GetCssFromTeacher(user.Id, semseterId.Id);
@@ -83,8 +92,8 @@ public class CssService: BaseService<ClassSubjectSemesterDto, ClassSubjectSemest
             };
         } else if (user.Role == UserRole.Parent)
         {
-            var student = await _userRepository.GetById(((user as Parent)!).StudentId);
-            if (student == null) throw new ValidationException<ClassSubjectSemesterDto>("Student not found");
+            var student = await _userRepository.GetById(((Parent) user).StudentId);
+            if (student == null) throw new ValidationException<StudentDto>("Student not found");
             var css = await ((ICssRepository) _repository).GetCssFromClassAndSemester(((student as Student)!).ClassId, semseterId.Id);
             var cssDto = _mapper.Map<ClassSubjectSemesterDto[]>(css);
             return new ServiceResponse<ClassSubjectSemesterDto[]>

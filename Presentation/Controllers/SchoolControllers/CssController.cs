@@ -64,7 +64,7 @@ public class CssController: BaseController<ClassSubjectSemesterDto, ClassSubject
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = UserRole.SchoolAdmin)]
+    [Authorize(Roles = UserRole.SchoolAdmin + "," + UserRole.Teacher)]
     public new Task<IActionResult> GetById(int id)
     {
         return base.GetById(id);

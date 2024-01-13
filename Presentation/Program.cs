@@ -25,9 +25,7 @@ var builder = WebApplication.CreateBuilder(args);
 //////////////////////// Repositories ////////////////////////
 // School
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
 builder.Services.AddScoped<IBehaviourGradeRepository, BehaviourGradeRepository>();
-builder.Services.AddScoped<IClassNoticeRepository, ClassNoticeRepository>();
 builder.Services.AddScoped<IClassRepository, ClassRepository>();
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 builder.Services.AddScoped<INoticeRepository, NoticeRepository>();
@@ -38,6 +36,7 @@ builder.Services.AddScoped<ICssRepository, CssRepository>();
 builder.Services.AddScoped<ICssInstanceRepository, CssInstanceRepository>();
 builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<IPresenceRepository, PresenceRepository>();
+builder.Services.AddScoped<IFinalGradeRepository, FinalGradeRepository>();
 // Users
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
@@ -50,9 +49,7 @@ builder.Services.AddScoped<IExistRepository, ExistRepository>();
 
 //////////////////////// Services ////////////////////////
 // School
-builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IBehaviorGradeService, BehaviorGradeService>();
-builder.Services.AddScoped<IClassNoticeService, ClassNoticeService>();
 builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IGradeService, GradeService>();
 builder.Services.AddScoped<INoticeService, NoticeService>();
@@ -63,6 +60,7 @@ builder.Services.AddScoped<ICssService, CssService>();
 builder.Services.AddScoped<ICssInstanceService, CssInstanceService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IPresenceService, PresenceService>();
+builder.Services.AddScoped<IFinalGradeService, FinalGradeService>();
 // Users
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ITeacherService, TeacherService>();

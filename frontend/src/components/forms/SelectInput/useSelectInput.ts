@@ -21,7 +21,7 @@ const useSelectInput = () => {
 
   const setOptionsList = (optionsList: SelectList[]) => {
     setOptions(optionsList);
-    setSelectedOption(optionsList[0].option);
+    if (optionsList.length > 0) setSelectedOption(optionsList[0].option);
   };
 
   return {

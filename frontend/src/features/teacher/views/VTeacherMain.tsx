@@ -10,7 +10,13 @@ const VTeacherMain = () => {
     <>
       <HeaderText text={'Plan lekcji'} />
       <Container>
-        <VTimeTableUser controller={controller.timeTable} />
+        <VTimeTableUser
+          controller={controller.timeTable}
+          weekSelector={{
+            week: controller.weekSelected,
+            setWeek: controller.handleWeekChange,
+          }}
+        />
       </Container>
     </>
   );

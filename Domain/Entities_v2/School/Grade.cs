@@ -14,10 +14,10 @@ public class Grade: IEntityBase
     public int Weight { get; set; }
     public string Description { get; set; }
     
-    public int AssignmentId { get; set; }
+    public int ClassSubjectSemesterId { get; set; }
     public int StudentId { get; set; }
     
-    public virtual Assignment Assignment { get; set; } = null!;
+    public virtual ClassSubjectSemester ClassSubjectSemester { get; set; } = null!;
     public virtual Student Student { get; set; } = null!;
     
 }

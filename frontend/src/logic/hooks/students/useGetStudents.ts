@@ -10,6 +10,7 @@ const useGetStudents = (classId: number) => {
     ['students'],
     () => studentRepository.getStudentsFromClass(classId),
     {
+      enabled: !!classId,
       onError: error => {
         dispathError.dispatchError(error as AxiosError);
       },

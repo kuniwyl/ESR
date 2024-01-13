@@ -2,9 +2,7 @@ namespace Domain.IRepositories;
 
 public interface IExistRepository
 {
-    Task<bool> IsAssignmentExist(int id);
     Task<bool> IsBehaviorGradeExist(int id);
-    Task<bool> IsClassNoticeExist(int id);
     Task<bool> IsClassExist(int id);
     Task<bool> IsCssExist(int id);
     Task<bool> IsGradeExist(int id);

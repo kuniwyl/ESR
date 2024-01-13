@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Application.Dto.School;
 using Application.Dto.Users;
 using Application.Exceptions;
 using Application.IServices;
+using Application.IServices.School;
 using Application.IServices.Users;
 using AutoMapper;
 using Domain.Entities_v2.School;
@@ -21,12 +23,14 @@ public class StudentService: BaseService<StudentDto, Student>, IStudentService
     private readonly IUserRepository _userRepository;
     private readonly IParentRepository _parentRepository;
     private readonly IAddressRepository _addressRepository;
+    private readonly ISemesterService _semesterService;
     
-    public StudentService(IStudentRepository repository, IMapper mapper, IExistRepository existRepository, IUserRepository userRepository, IHttpContextAccessor contextAccessor, IParentRepository parentRepository, IAddressRepository addressRepository) : base(repository, mapper, existRepository, contextAccessor)
+    public StudentService(IStudentRepository repository, ISemesterService semesterService, IMapper mapper, IExistRepository existRepository, IUserRepository userRepository, IHttpContextAccessor contextAccessor, IParentRepository parentRepository, IAddressRepository addressRepository) : base(repository, mapper, existRepository, contextAccessor)
     {
         _userRepository = userRepository;
         _parentRepository = parentRepository;
         _addressRepository = addressRepository;
+        _semesterService = semesterService;
     }
 
     public async Task<ServiceResponse<StudentDto>> Add(CreateUserDto entity)
@@ -153,6 +157,38 @@ public class StudentService: BaseService<StudentDto, Student>, IStudentService
             Message = "",
             Success = true
         };
+    }
+
+    public async Task<ServiceResponse<UserSubjects>> GetSubjects()
+    {
+        var response = new ServiceResponse<UserSubjects>();
+        var userId = _contextAccessor.GetUserId();
+        var user = await _userRepository.GetById(int.Parse(userId));
+        if (user == null)
+        {
+            throw new ObjectNotFoundException<User>(int.Parse(userId));
+        }
+        var studnetId = user.Role == UserRole.Student ? int.Parse(userId) : ((Parent) user).StudentId;
+        var studnet = await _repository.GetById(studnetId);
+        if (studnet == null)
+        {
+            throw new ObjectNotFoundException<Student>(studnetId);
+        }
+        var semester = await _semesterService.GetCurrentSemester(studnet.SchoolId);
+        var css = await ((IStudentRepository) _repository).GetClassSubjectSemesters(studnet.ClassId, semester.Data.Id);
+        var finalGrades = await ((IStudentRepository) _repository).GetFinalGrades(studnet.Id, semester.Data.Id);
+        var grades = await ((IStudentRepository) _repository).GetGrades(studnet.Id, semester.Data.Id);
+        var presence = await ((IStudentRepository) _repository).GetPresence(studnet.Id, semester.Data.Id);
+        
+        response.Data = new UserSubjects
+        {
+            ClassSubjectSemesters = _mapper.Map<ClassSubjectSemesterDto[]>(css),
+            FinalGrades = _mapper.Map<FinalGradeDto[]>(finalGrades),
+            Grades = _mapper.Map<GradeDto[]>(grades),
+            Presences = _mapper.Map<PresenceDto[]>(presence)
+        };
+        
+        return response;
     }
 
     public override async void Validate(StudentDto entity)

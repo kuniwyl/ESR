@@ -16,6 +16,9 @@ public class CssRepository: RepositoryBase<ClassSubjectSemester>, ICssRepository
     {
         return await _context.ClassSubjectSemesters
             .Include(x => x.Subject)
+            .Include(x => x.Grades)
+            .Include(x => x.Lessons)
+            .Include(x => x.FinalGrades)
             .Include(x => x.Subject.Teacher)
             .Include(x => x.Class)
             .Where(x => x.ClassId == classId && x.SemesterId == semesterId)
@@ -26,7 +29,7 @@ public class CssRepository: RepositoryBase<ClassSubjectSemester>, ICssRepository
     public async Task<ClassSubjectSemester[]> GetCssFromTeacher(int teacherId, int semesterId)
     {
         return await _context.ClassSubjectSemesters
-            .Include(x => x.Assignments)
+            .Include(x => x.Grades)
             .Include(x => x.Subject.Teacher)
             .Include(x => x.Class)
             .Where(x => x.Subject.TeacherId == teacherId && x.SemesterId == semesterId)
@@ -37,9 +40,7 @@ public class CssRepository: RepositoryBase<ClassSubjectSemester>, ICssRepository
     public async Task<ClassSubjectSemester> GetGradesFromCss(int cssId)
     {
         return await _context.ClassSubjectSemesters
-            .Include(x => x.Assignments)
-            .Include(x => x.Assignments.Select(x => x.Grades))
-            .Include(x => x.Assignments.Select(x => x.Grades.Select(x => x.Student)))
+            .Include(x => x.Grades)
             .Where(x => x.Id == cssId)
             .Where(x => x.Status != Status.Deleted)
             .FirstOrDefaultAsync();
@@ -47,11 +48,10 @@ public class CssRepository: RepositoryBase<ClassSubjectSemester>, ICssRepository
 
     public new async Task<ClassSubjectSemester?> GetById(int id)
     {
-        // group by students
         return await _context.ClassSubjectSemesters
             .Include(x => x.Class)
-            .Include(x => x.Assignments)
-            .Include(x => x.Assignments.Select(x => x.Grades.Select(x => x.Student)))
+            .Include(x => x.Grades)
+            .Include(x => x.Grades)
             .Where(x => x.Id == id)
             .FirstOrDefaultAsync();
     }

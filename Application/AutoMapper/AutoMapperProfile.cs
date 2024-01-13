@@ -16,16 +16,23 @@ public class AutoMapperProfile : Profile
         // School
         CreateMap<Address, AddressDto>();
         CreateMap<AddressDto, Address>();
+        
+        CreateMap<Lesson, LessonDto>()
+            .ForMember(opt => opt.Presences, opt => opt.MapFrom(src => src.Presences));
+        CreateMap<LessonDto, Lesson>();
 
-        CreateMap<Assignment, AssignmentDto>()
-            .ForMember(opt => opt.Grades, opt => opt.MapFrom(src => src.Grades));
-        CreateMap<AssignmentDto, Assignment>();
+        CreateMap<Presence, PresenceDto>()
+            .ForMember(opt => opt.StudentName,
+                opt => opt.MapFrom(src => (src.Student.FirstName + " " + src.Student.LastName)))
+            .ForMember(opt => opt.LessonName, opt => opt.MapFrom(src => src.Lesson.Name))
+            .ForMember(opt => opt.CssId, opt => opt.MapFrom(src => src.Lesson.ClassSubjectSemesterId));
+        CreateMap<PresenceDto, Presence>();
+
+        CreateMap<FinalGrade, FinalGradeDto>();
+        CreateMap<FinalGradeDto, FinalGrade>();
         
         CreateMap<BehaviorGrade, BehaviorGradeDto>();
         CreateMap<BehaviorGradeDto, BehaviorGrade>();
-        
-        CreateMap<ClassNotice, ClassNoticeDto>();
-        CreateMap<ClassNoticeDto, ClassNotice>();
 
         CreateMap<Class, ClassDto>().ForMember(x => x.TeacherName,
             opt => opt.MapFrom(src => (src.Teacher.FirstName + " " + src.Teacher.LastName)));
@@ -36,8 +43,12 @@ public class AutoMapperProfile : Profile
                 opt => opt.MapFrom(src => (src.Student.FirstName + " " + src.Student.LastName)));
         CreateMap<GradeDto, Grade>();
 
-        CreateMap<Notice, NoticeDto>();
+        CreateMap<Notice, NoticeDto>()
+            .ForMember(opt => opt.ClassNotices, opt => opt.MapFrom(src => src.ClassNotices));
         CreateMap<NoticeDto, Notice>();
+        
+        CreateMap<ClassNotice, ClassNoticeDto>();
+        CreateMap<ClassNoticeDto, ClassNotice>();
         
         CreateMap<School, SchoolDto>()
             .ForMember(x => x.Address, opt => opt.MapFrom(src => src.Address))

@@ -21,9 +21,12 @@ const CLogin = () => {
         navigate(ROUTES.SEMESTERS_SHOW());
       } else if (authState.isAuth && authState.role === UserRole.TEACHER) {
         navigate(ROUTES.TEACHER_MAIN());
+      } else if (authState.isAuth && authState.role === UserRole.STUDENT) {
+        navigate(ROUTES.STUDENT_MAIN());
+      } else if (authState.isAuth && authState.role === UserRole.PARENT) {
+        navigate(ROUTES.PARENT_BASE());
       }
     };
-    console.log(authState);
     checkLogin();
   }, [authState.role, authState.refreshToken]);
 

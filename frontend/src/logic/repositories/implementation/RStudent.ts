@@ -3,6 +3,7 @@ import ServiceResponse from '@/domain/ServiceResponse.ts';
 import StudentDto from '@/domain/dtos/StudentDto.ts';
 import { axiosInstance } from '@/configuration/apiConfig.ts';
 import CreateStudentDto from '@/domain/dtos/CreateStudentDto.ts';
+import UserSubjects from '@/domain/dtos/UserSubjects.ts';
 
 const url = 'students';
 
@@ -11,6 +12,12 @@ class RStudent implements IRStudent {
     classId: number,
   ): Promise<ServiceResponse<StudentDto[]>> {
     return axiosInstance.get(`${url}/class/${classId}`).then(response => {
+      return response.data;
+    });
+  }
+
+  getSubjectsFromStudent(): Promise<ServiceResponse<UserSubjects>> {
+    return axiosInstance.get(`${url}`).then(response => {
       return response.data;
     });
   }

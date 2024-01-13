@@ -16,6 +16,12 @@ public class GradeController: BaseController<GradeDto, Grade>
     {
     }
     
+    [HttpGet("css/{id}")]
+    public async Task<IActionResult> GetGradesByCssId(int id)
+    {
+        return Ok(await Service.GetGradesByGradeId(id));
+    }
+    
     [HttpPost]
     public new async Task<IActionResult> Create(GradeDto entity)
     {

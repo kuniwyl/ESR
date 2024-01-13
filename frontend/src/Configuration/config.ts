@@ -66,6 +66,18 @@ const TEACHER_SUBJECTS_GRADES = (cssId: string) =>
 const TEACHER_SUBJECTS_FREQUENCIES = (subjectId: string) =>
   `${TEACHER_SUBJECTS()}/${subjectId}/frequencies`;
 
+const TEACHER_NOTICE = () => `${TEACHER_BASE()}/notice`;
+
+// Student
+const STUDENT_BASE = () => '/student';
+const STUDENT_MAIN = () => `${STUDENT_BASE()}/main`;
+const STUDENT_SUBJECTS = () => `${STUDENT_BASE()}/subjects`;
+const STUDENT_NOTIFICATONS = () => `${STUDENT_BASE()}/notifications`;
+
+const PARENT_BASE = () => '/parent';
+const PARENT_MAIN = () => `${PARENT_BASE()}/main`;
+const PARENT_SUBJECTS = () => `${PARENT_BASE()}/subjects`;
+const PARENT_NOTIFICATONS = () => `${PARENT_BASE()}/notifications`;
 export const ROUTES = {
   LOGIN,
   LOGOUT,
@@ -109,4 +121,15 @@ export const ROUTES = {
   TEACHER_SUBJECTS,
   TEACHER_SUBJECTS_GRADES,
   TEACHER_SUBJECTS_FREQUENCIES,
+  TEACHER_NOTICE,
+
+  STUDENT_BASE,
+  STUDENT_MAIN,
+  STUDENT_SUBJECTS,
+  STUDENT_NOTIFICATONS,
+
+  PARENT_BASE,
+  PARENT_MAIN,
+  PARENT_SUBJECTS,
+  PARENT_NOTIFICATONS,
 };

@@ -13,5 +13,8 @@ public class Lesson: IEntityBase
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
     
+    public int ClassSubjectSemesterId { get; set; }
+    
     public virtual List<Presence> Presences { get; set; } = null!;
+    public virtual ClassSubjectSemester ClassSubjectSemester { get; set; } = null!;
 }

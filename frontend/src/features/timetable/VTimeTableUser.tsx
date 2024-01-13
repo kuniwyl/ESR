@@ -1,9 +1,16 @@
 import Days from '@/domain/Days.ts';
 import { Table } from 'react-bootstrap';
 import { CTimeTableUserType } from '@/features/timetable/CTimeTableUser.ts';
+import { returnUseGetWeekByDay } from '@/features/timetable/useGetWeekByDay.ts';
+import { ArrowLeft, ArrowRight } from 'react-bootstrap-icons';
+import ButtonEvent from '@/components/ui/ButtonEvent/ButtonEvent.tsx';
 
 interface VTimeTableUserProps {
   controller: CTimeTableUserType;
+  weekSelector: {
+    week: returnUseGetWeekByDay;
+    setWeek: (upOrDown: number) => void;
+  };
 }
 
 const VTimeTableUser = (props: VTimeTableUserProps) => {
@@ -51,9 +58,28 @@ const VTimeTableUser = (props: VTimeTableUserProps) => {
       );
     });
 
+  const [weekStart, weekEnd] = props.weekSelector.week;
   return (
     <>
-      <Table className="my-2" striped bordered hover responsive>
+      <div
+        className={
+          'd-flex w-100 justify-content-between align-items-center border-top m-0'
+        }
+      >
+        <ButtonEvent
+          text={<ArrowLeft />}
+          event={() => props.weekSelector.setWeek(-1)}
+        />
+        <span>
+          {weekStart.toISOString().substring(0, 10)} -{' '}
+          {weekEnd.toISOString().substring(0, 10)}
+        </span>
+        <ButtonEvent
+          text={<ArrowRight />}
+          event={() => props.weekSelector.setWeek(1)}
+        />
+      </div>
+      <Table striped bordered hover responsive>
         <thead>
           <tr>
             <th>Godzina</th>

@@ -28,6 +28,18 @@ public class StudentController: UserController<StudentDto, Student>
         } 
         return Ok(result);
     }
+    
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetSubjects()
+    {
+        var result = await Service.GetSubjects();
+        if (!result.Success)
+        {
+            return BadRequest(result.Message);
+        } 
+        return Ok(result);
+    }
 
     [HttpGet("{id}")]
     [Authorize(Roles = UserRole.SchoolAdmin + ", " + UserRole.Teacher)]

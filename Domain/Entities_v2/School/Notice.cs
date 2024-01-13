@@ -17,4 +17,8 @@ public class Notice: IEntityBase
     
     public DateOnly Date { get; set; }
     public int? Slot { get; set; }
+    
+    public bool IsNotForAll { get; set; }
+    
+    public virtual List<ClassNotice> ClassNotices { get; set; } = new List<ClassNotice>();
 }

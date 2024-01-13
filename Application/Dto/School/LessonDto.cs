@@ -12,5 +12,7 @@ public class LessonDto: IBaseDto
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
     
-    public List<PresenceDto> Presences { get; set; } = null!;
+    public int ClassSubjectSemesterId { get; set; }
+    
+    public virtual List<PresenceDto> Presences { get; set; } = null!;
 }

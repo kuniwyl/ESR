@@ -22,8 +22,15 @@ import IRCss from '@/logic/repositories/interfaces/IRCss.ts';
 import RCss from '@/logic/repositories/implementation/RCss.ts';
 import IRCssInstance from '@/logic/repositories/interfaces/IRCssInstance.ts';
 import RCssInstance from '@/logic/repositories/implementation/RCssInstance.ts';
-import RAssignment from '@/logic/repositories/implementation/RAssignment.ts';
-import IRAssignment from '@/logic/repositories/interfaces/IRAssignment.ts';
+import RGrade from '@/logic/repositories/implementation/RGrade.ts';
+import IRGrade from '@/logic/repositories/interfaces/IRGrade.ts';
+import RFinalGrade from '@/logic/repositories/implementation/RFinalGrade.ts';
+import IRLesson from '@/logic/repositories/interfaces/IRLesson.ts';
+import RLesson from '@/logic/repositories/implementation/RLesson.ts';
+import IRPresence from '@/logic/repositories/interfaces/IRPresence.ts';
+import RPresence from '@/logic/repositories/implementation/RPresence.ts';
+import IRNotice from '@/logic/repositories/interfaces/IRNotice.ts';
+import RNotice from '@/logic/repositories/implementation/RNotice.ts';
 
 const auth: IRAuth = new RAuth();
 const systemAdmin: IRSystemAdmin = new RSystemAdmin();
@@ -37,7 +44,11 @@ const student: IRStudent = new RStudent();
 const parent: IRParent = new RParent();
 const css: IRCss = new RCss();
 const cssInstance: IRCssInstance = new RCssInstance();
-const assignment: IRAssignment = new RAssignment();
+const grade: IRGrade = new RGrade();
+const finalGrade: RFinalGrade = new RFinalGrade();
+const lesson: IRLesson = new RLesson();
+const presence: IRPresence = new RPresence();
+const notice: IRNotice = new RNotice();
 
 const repositoryContext = {
   auth,
@@ -52,7 +63,11 @@ const repositoryContext = {
   parent,
   css,
   cssInstance,
-  assignment,
+  grade,
+  finalGrade,
+  lesson,
+  presence,
+  notice,
 };
 
 export default repositoryContext;

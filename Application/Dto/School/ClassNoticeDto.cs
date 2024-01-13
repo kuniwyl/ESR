@@ -9,11 +9,7 @@ public class ClassNoticeDto: IBaseDto
     public DateTime Updated { get; set; }
     public Status Status { get; set; }
     
-    public string Title { get; set; } = null!;
-    public string Content { get; set; } = null!;
-    
     public int ClassId { get; set; }
-    public int SemesterId { get; set; }
-    public DateOnly Date { get; set; }
-    public int? Slot { get; set; }
+    
+    public int NoticeId { get; set; }
 }

@@ -18,7 +18,6 @@ public abstract class BaseController<TDto, TModel> : ControllerBase
         this._service = service;
     }
     
-    // [HttpGet]
     [NonAction]
     public virtual async Task<IActionResult> GetAll()
     {
@@ -30,7 +29,6 @@ public abstract class BaseController<TDto, TModel> : ControllerBase
         return Ok(result);
     }
     
-    // [HttpGet("page/{page}/size/{size}")]
     [NonAction]
     public virtual async Task<IActionResult> GetWithPagination(int page, int size)
     {
@@ -42,7 +40,6 @@ public abstract class BaseController<TDto, TModel> : ControllerBase
         return Ok(result);
     }
     
-    // [HttpGet("{id}")]\
     [NonAction]
     public virtual async Task<IActionResult> GetById(int id)
     {
@@ -53,8 +50,7 @@ public abstract class BaseController<TDto, TModel> : ControllerBase
         } 
         return Ok(result);
     }
-    
-    // [HttpPost]
+
     [NonAction]
     public async Task<IActionResult> Create([FromBody] TDto dto)
     {
@@ -65,8 +61,7 @@ public abstract class BaseController<TDto, TModel> : ControllerBase
         } 
         return Created("", result);
     }
-    
-    // [HttpPut("{id}")]
+
     [NonAction]
     public virtual async Task<IActionResult> Update(int id, [FromBody] TDto dto)
     {
@@ -78,7 +73,6 @@ public abstract class BaseController<TDto, TModel> : ControllerBase
         return Ok(result);
     }
     
-    // [HttpDelete("{id}")]
     [NonAction]
     public virtual async Task<IActionResult> Delete(int id)
     {

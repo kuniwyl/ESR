@@ -9,6 +9,8 @@ import { useContext } from 'react';
 import { authContext } from '@/context/auth';
 import TeacherRequired from '@/features/layouts/TeacherRequired.ts';
 import SessionRefresh from '@/features/auth/refreshToken/SessionRefresh.tsx';
+import StudentRequired from '@/features/layouts/StudentRequired.ts';
+import ParentRequired from '@/features/layouts/ParentRequired.ts';
 
 const Navigation = () => {
   const { authState, logout } = useContext(authContext);
@@ -61,8 +63,48 @@ const Navigation = () => {
                 >
                   Przedmioty
                 </Link>
+                <Link className={'nav-link me-2'} to={ROUTES.TEACHER_NOTICE()}>
+                  Powiadomienia
+                </Link>
               </>
             </TeacherRequired>
+
+            <StudentRequired>
+              <>
+                <Link className={'nav-link me-2'} to={ROUTES.STUDENT_MAIN()}>
+                  Plan lekcji
+                </Link>
+                <Link
+                  className={'nav-link me-2'}
+                  to={ROUTES.STUDENT_NOTIFICATONS()}
+                >
+                  Powiadomienia
+                </Link>
+                <Link
+                  className={'nav-link me-2'}
+                  to={ROUTES.STUDENT_SUBJECTS()}
+                >
+                  Oceny
+                </Link>
+              </>
+            </StudentRequired>
+
+            <ParentRequired>
+              <>
+                <Link className={'nav-link me-2'} to={ROUTES.PARENT_MAIN()}>
+                  Plan lekcji
+                </Link>
+                <Link
+                  className={'nav-link me-2'}
+                  to={ROUTES.PARENT_NOTIFICATONS()}
+                >
+                  Powiadomienia
+                </Link>
+                <Link className={'nav-link me-2'} to={ROUTES.PARENT_SUBJECTS()}>
+                  Oceny
+                </Link>
+              </>
+            </ParentRequired>
 
             {!authState.isAuth ? (
               <>

@@ -4,7 +4,7 @@ interface GradeDto extends EntityBase {
   value: number;
   weight: number;
   description: string;
-  assigmentId: number;
+  classSubjectSemesterId: number;
   studentId: number;
   studentName?: string;
 }

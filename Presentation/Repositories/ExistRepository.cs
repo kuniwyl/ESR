@@ -6,9 +6,7 @@ namespace Presentation.Repositories;
 
 public class ExistRepository: IExistRepository
 {
-    private readonly IAssignmentRepository _assignmentRepository;
     private readonly IBehaviourGradeRepository _behaviourGradeRepository;
-    private readonly IClassNoticeRepository _classNoticeRepository;
     private readonly IClassRepository _classRepository;
     private readonly ICssRepository _cssRepository;
     private readonly IGradeRepository _gradeRepository;
@@ -23,11 +21,9 @@ public class ExistRepository: IExistRepository
     private readonly ISchoolAdminRepository _schoolAdminRepository;
 
 
-    public ExistRepository(IAssignmentRepository assignmentRepository, IBehaviourGradeRepository behaviourGradeRepository, IClassNoticeRepository classNoticeRepository, IClassRepository classRepository, ICssRepository cssRepository, IGradeRepository gradeRepository, INoticeRepository noticeRepository, ISchoolRepository schoolRepository, ISemesterRepository semesterRepository, ISubjectRepository subjectRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IParentRepository parentRepository, ISystemAdminRepository systemAdminRepository, ISchoolAdminRepository schoolAdminRepository)
+    public ExistRepository(IBehaviourGradeRepository behaviourGradeRepository, IClassRepository classRepository, ICssRepository cssRepository, IGradeRepository gradeRepository, INoticeRepository noticeRepository, ISchoolRepository schoolRepository, ISemesterRepository semesterRepository, ISubjectRepository subjectRepository, IStudentRepository studentRepository, ITeacherRepository teacherRepository, IParentRepository parentRepository, ISystemAdminRepository systemAdminRepository, ISchoolAdminRepository schoolAdminRepository)
     {
-        _assignmentRepository = assignmentRepository;
         _behaviourGradeRepository = behaviourGradeRepository;
-        _classNoticeRepository = classNoticeRepository;
         _classRepository = classRepository;
         _cssRepository = cssRepository;
         _gradeRepository = gradeRepository;
@@ -41,22 +37,12 @@ public class ExistRepository: IExistRepository
         _systemAdminRepository = systemAdminRepository;
         _schoolAdminRepository = schoolAdminRepository;
     }
-
-    public async Task<bool> IsAssignmentExist(int id)
-    {
-        return await _assignmentRepository.Exists(id);
-    }
-
+    
     public async Task<bool> IsBehaviorGradeExist(int id)
     {
         return await _behaviourGradeRepository.Exists(id);
     }
-
-    public async Task<bool> IsClassNoticeExist(int id)
-    {
-        return await _classNoticeRepository.Exists(id);
-    }
-
+    
     public async Task<bool> IsClassExist(int id)
     {
         return await _classRepository.Exists(id);

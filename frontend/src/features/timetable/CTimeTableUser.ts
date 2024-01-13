@@ -5,10 +5,12 @@ import SemesterDto from '@/domain/dtos/SemesterDto.ts';
 import { authContext } from '@/context/auth';
 import { useContext } from 'react';
 import { UserRole } from '@/domain/UserRole.ts';
+import NoticeDto from '@/domain/dtos/NoticeDto.ts';
 
 const CTimeTableUser = (
   semester: SemesterDto | undefined,
   css: CssInstanceDto[] | undefined,
+  noticeCss: NoticeDto[] | undefined,
 ) => {
   const { authState } = useContext(authContext);
   const lessonsTimes = () => {
@@ -50,7 +52,15 @@ const CTimeTableUser = (
       const cssInstance = css.find(
         cssInstance => cssInstance.day === day && cssInstance.slot === slot.idx,
       );
-      if (cssInstance) {
+      const cssNoticeInstance = noticeCss?.find(
+        cssNoticeInstance =>
+          new Date(cssNoticeInstance.date).getDay() - 1 === day &&
+          cssNoticeInstance.slot === slot.idx,
+      );
+
+      if (cssNoticeInstance) {
+        return cssNoticeInstance.title;
+      } else if (cssInstance) {
         if (authState.role === UserRole.TEACHER) {
           return cssInstance.subjectName + ' - ' + cssInstance.className;
         } else if (

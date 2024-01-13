@@ -23,4 +23,16 @@ public class LessonService: BaseService<LessonDto, Lesson>, ILessonService
     {
         return true;
     }
+
+    public async Task<ServiceResponse<List<LessonDto>>> GetLessonByCssId(int id)
+    {
+        var result = await ((ILessonRepository) _repository).GetLessonByCssId(id);
+        var mapped = _mapper.Map<List<LessonDto>>(result);
+        return new ServiceResponse<List<LessonDto>>
+        {
+            Success = true,
+            Message = "",
+            Data = mapped
+        };
+    }
 }

@@ -15,8 +15,9 @@ public class ClassSubjectSemester: IEntityBase
     public int SemesterId { get; set; }
     
     public virtual List<ClassSubjectSemesterInstance> ClassSubjectSemesterInstances { get; set; } = null!;
-    public virtual List<Assignment> Assignments { get; set; } = null!;
+    public virtual List<Grade> Grades { get; set; } = null!;
     public virtual List<Lesson> Lessons { get; set; } = null!;
+    public virtual List<FinalGrade> FinalGrades { get; set; } = null!;
     
     public virtual Class Class { get; set; } = null!;
     public virtual Subject Subject { get; set; } = null!;

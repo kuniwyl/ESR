@@ -25,6 +25,14 @@ import VResetPassword from '@/features/users/resetPassword/VResetPassword.tsx';
 import VSystemAdmin from '@/features/systemAdmin/VSystemAdmin.tsx';
 import VTeacher from '@/features/teachers/VTeacher.tsx';
 import VTeacherGrades from '@/features/teacher/views/VTeacherGrades.tsx';
+import VTeacherAttendance from '@/features/teacher/views/VTeacherAttendance.tsx';
+import VTeacherNotice from '@/features/teacher/views/VTeacherNotice.tsx';
+import StudentLayout from '@/features/student/StudentLayout.tsx';
+import VStudTimeTable from '@/features/student/timetable/VStudTimeTable.tsx';
+import VStudSubjects from '@/features/student/subjects/VStudSubjects.tsx';
+import VStudNotification from '@/features/student/notification/VStudNotification.tsx';
+import ParentRequired from '@/features/layouts/ParentRequired.ts';
+import ParentLayout from '@/features/layouts/ParentLayout.tsx';
 
 const router = createBrowserRouter([
   {
@@ -167,47 +175,52 @@ const router = createBrowserRouter([
         path: ROUTES.TEACHER_SUBJECTS_GRADES(':id'),
         element: <VTeacherGrades />,
       },
+      {
+        path: ROUTES.TEACHER_SUBJECTS_FREQUENCIES(':id'),
+        element: <VTeacherAttendance />,
+      },
+      {
+        path: ROUTES.TEACHER_NOTICE(),
+        element: <VTeacherNotice />,
+      },
     ],
   },
-  // {
-  //   path: ROUTES.SYSTEM_ADMIN,
-  //   element: <SystemAdminLayout />,
-  //   children: [
-  //     {
-  //       path: ROUTES.SHOW_SCHOOLS,
-  //       element: (
-  //         <SchoolsListPresenter systemAdminRepository={systemAdminRepository} />
-  //       ),
-  //     },
-  //     {
-  //       path: CREATE_SCHOOL,
-  //       element: (
-  //         <CreateSchoolPresenter
-  //           systemAdminRepository={systemAdminRepository}
-  //         />
-  //       ),
-  //     },
-  //     {
-  //       path: EDIT_SCHOOL + ':id',
-  //       element: (
-  //         <SchoolEditPresenter systemAdminRepository={systemAdminRepository} />
-  //       ),
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: SCHOOL_ADMIN,
-  //   element: <SchoolAdminLayout />,
-  //   children: [
-  //     { path: SHOW_CLASSES, element: <ShowClassesView /> },
-  //     { path: EDIT_CLASS + ':id', element: <EditClassView /> },
-  //     { path: SHOW_SUBJECTS, element: <ShowSubjectsView /> },
-  //     { path: EDIT_SUBJECT + ':id', element: <EditSubjectView /> },
-  //     { path: SHOW_STUDENTS, element: <ShowStudentsView /> },
-  //     { path: SHOW_TEACHERS, element: <ShowTeachersView /> },
-  //     { path: SHOW_PARENTS, element: <ShowParentsView /> },
-  //   ],
-  // },
+  {
+    path: ROUTES.STUDENT_BASE(),
+    element: <StudentLayout />,
+    children: [
+      {
+        path: ROUTES.STUDENT_MAIN(),
+        element: <VStudTimeTable />,
+      },
+      {
+        path: ROUTES.STUDENT_SUBJECTS(),
+        element: <VStudSubjects />,
+      },
+      {
+        path: ROUTES.STUDENT_NOTIFICATONS(),
+        element: <VStudNotification />,
+      },
+    ],
+  },
+  {
+    path: ROUTES.PARENT_BASE(),
+    element: <ParentLayout />,
+    children: [
+      {
+        path: ROUTES.PARENT_MAIN(),
+        element: <VStudTimeTable />,
+      },
+      {
+        path: ROUTES.PARENT_SUBJECTS(),
+        element: <VStudSubjects />,
+      },
+      {
+        path: ROUTES.PARENT_NOTIFICATONS(),
+        element: <VStudNotification />,
+      },
+    ],
+  },
 ]);
 
 export default router;

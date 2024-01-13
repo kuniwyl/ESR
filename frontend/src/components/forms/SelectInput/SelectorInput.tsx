@@ -19,9 +19,9 @@ const SelectInput = (props: SelectInputProps) => {
   ));
 
   return (
-    <div className={'input flex-grow-1 p-1 mb-3 select'}>
+    <div className={`input flex-grow-1 p-1 mb-3 select ${props.className}`}>
       <Form.Label htmlFor={randomId}>{label}</Form.Label>
-      <InputGroup id={randomId} className="mb-3">
+      <InputGroup id={randomId}>
         <Form.Select onChange={props.onChange} value={props.value}>
           {optionsMap}
         </Form.Select>

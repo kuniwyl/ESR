@@ -63,41 +63,6 @@ namespace Application.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("Domain.Entities_v2.School.Assignment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassSubjectSemesterId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassSubjectSemesterId");
-
-                    b.ToTable("Assignments");
-                });
-
             modelBuilder.Entity("Domain.Entities_v2.School.BehaviorGrade", b =>
                 {
                     b.Property<int>("Id")
@@ -189,28 +154,14 @@ namespace Application.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<int>("SemesterId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("Slot")
+                    b.Property<int>("NoticeId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("timestamp with time zone");
@@ -219,9 +170,9 @@ namespace Application.Migrations
 
                     b.HasIndex("ClassId");
 
-                    b.HasIndex("SemesterId");
+                    b.HasIndex("NoticeId");
 
-                    b.ToTable("ClassesNotice");
+                    b.ToTable("ClassNotices");
                 });
 
             modelBuilder.Entity("Domain.Entities_v2.School.ClassSubjectSemester", b =>
@@ -297,6 +248,41 @@ namespace Application.Migrations
                     b.ToTable("ClassSubjectSemesterInstances");
                 });
 
+            modelBuilder.Entity("Domain.Entities_v2.School.FinalGrade", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClassSubjectSemesterId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Value")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassSubjectSemesterId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("FinalGrades");
+                });
+
             modelBuilder.Entity("Domain.Entities_v2.School.Grade", b =>
                 {
                     b.Property<int>("Id")
@@ -305,7 +291,7 @@ namespace Application.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AssignmentId")
+                    b.Property<int>("ClassSubjectSemesterId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Created")
@@ -332,7 +318,7 @@ namespace Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignmentId");
+                    b.HasIndex("ClassSubjectSemesterId");
 
                     b.HasIndex("StudentId");
 
@@ -347,7 +333,7 @@ namespace Application.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClassSubjectSemesterId")
+                    b.Property<int>("ClassSubjectSemesterId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Created")
@@ -391,6 +377,9 @@ namespace Application.Migrations
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
+
+                    b.Property<bool>("IsNotForAll")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("SemesterId")
                         .HasColumnType("integer");
@@ -713,17 +702,6 @@ namespace Application.Migrations
                     b.ToTable("SchoolAdmins", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities_v2.School.Assignment", b =>
-                {
-                    b.HasOne("Domain.Entities_v2.School.ClassSubjectSemester", "ClassSubjectSemester")
-                        .WithMany("Assignments")
-                        .HasForeignKey("ClassSubjectSemesterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClassSubjectSemester");
-                });
-
             modelBuilder.Entity("Domain.Entities_v2.School.BehaviorGrade", b =>
                 {
                     b.HasOne("Domain.Entities_v2.Users.Student", "Student")
@@ -765,20 +743,20 @@ namespace Application.Migrations
             modelBuilder.Entity("Domain.Entities_v2.School.ClassNotice", b =>
                 {
                     b.HasOne("Domain.Entities_v2.School.Class", "Class")
-                        .WithMany()
+                        .WithMany("ClassNotices")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities_v2.School.Semester", "Semester")
+                    b.HasOne("Domain.Entities_v2.School.Notice", "Notice")
                         .WithMany("ClassNotices")
-                        .HasForeignKey("SemesterId")
+                        .HasForeignKey("NoticeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Class");
 
-                    b.Navigation("Semester");
+                    b.Navigation("Notice");
                 });
 
             modelBuilder.Entity("Domain.Entities_v2.School.ClassSubjectSemester", b =>
@@ -819,11 +797,30 @@ namespace Application.Migrations
                     b.Navigation("ClassSubjectSemester");
                 });
 
+            modelBuilder.Entity("Domain.Entities_v2.School.FinalGrade", b =>
+                {
+                    b.HasOne("Domain.Entities_v2.School.ClassSubjectSemester", "ClassSubjectSemester")
+                        .WithMany("FinalGrades")
+                        .HasForeignKey("ClassSubjectSemesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities_v2.Users.Student", "Student")
+                        .WithMany("FinalGrades")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClassSubjectSemester");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Domain.Entities_v2.School.Grade", b =>
                 {
-                    b.HasOne("Domain.Entities_v2.School.Assignment", "Assignment")
+                    b.HasOne("Domain.Entities_v2.School.ClassSubjectSemester", "ClassSubjectSemester")
                         .WithMany("Grades")
-                        .HasForeignKey("AssignmentId")
+                        .HasForeignKey("ClassSubjectSemesterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -833,16 +830,20 @@ namespace Application.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Assignment");
+                    b.Navigation("ClassSubjectSemester");
 
                     b.Navigation("Student");
                 });
 
             modelBuilder.Entity("Domain.Entities_v2.School.Lesson", b =>
                 {
-                    b.HasOne("Domain.Entities_v2.School.ClassSubjectSemester", null)
+                    b.HasOne("Domain.Entities_v2.School.ClassSubjectSemester", "ClassSubjectSemester")
                         .WithMany("Lessons")
-                        .HasForeignKey("ClassSubjectSemesterId");
+                        .HasForeignKey("ClassSubjectSemesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClassSubjectSemester");
                 });
 
             modelBuilder.Entity("Domain.Entities_v2.School.Notice", b =>
@@ -1005,13 +1006,10 @@ namespace Application.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities_v2.School.Assignment", b =>
-                {
-                    b.Navigation("Grades");
-                });
-
             modelBuilder.Entity("Domain.Entities_v2.School.Class", b =>
                 {
+                    b.Navigation("ClassNotices");
+
                     b.Navigation("ClassSubjectSemesters");
 
                     b.Navigation("Students");
@@ -1019,9 +1017,11 @@ namespace Application.Migrations
 
             modelBuilder.Entity("Domain.Entities_v2.School.ClassSubjectSemester", b =>
                 {
-                    b.Navigation("Assignments");
-
                     b.Navigation("ClassSubjectSemesterInstances");
+
+                    b.Navigation("FinalGrades");
+
+                    b.Navigation("Grades");
 
                     b.Navigation("Lessons");
                 });
@@ -1029,6 +1029,11 @@ namespace Application.Migrations
             modelBuilder.Entity("Domain.Entities_v2.School.Lesson", b =>
                 {
                     b.Navigation("Presences");
+                });
+
+            modelBuilder.Entity("Domain.Entities_v2.School.Notice", b =>
+                {
+                    b.Navigation("ClassNotices");
                 });
 
             modelBuilder.Entity("Domain.Entities_v2.School.School", b =>
@@ -1042,8 +1047,6 @@ namespace Application.Migrations
 
             modelBuilder.Entity("Domain.Entities_v2.School.Semester", b =>
                 {
-                    b.Navigation("ClassNotices");
-
                     b.Navigation("ClassSubjectSemesters");
 
                     b.Navigation("Notices");
@@ -1056,6 +1059,8 @@ namespace Application.Migrations
 
             modelBuilder.Entity("Domain.Entities_v2.Users.Student", b =>
                 {
+                    b.Navigation("FinalGrades");
+
                     b.Navigation("Grades");
 
                     b.Navigation("Parent")

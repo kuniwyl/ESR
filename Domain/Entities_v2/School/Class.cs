@@ -21,5 +21,6 @@ public class Class: IEntityBase
     public virtual Teacher Teacher { get; set; } = null!;
     
     public virtual List<Student> Students { get; set; } = new List<Student>();
+    public virtual List<ClassNotice> ClassNotices { get; set; } = new List<ClassNotice>();
     public virtual List<ClassSubjectSemester> ClassSubjectSemesters { get; set; } = new List<ClassSubjectSemester>();
 }

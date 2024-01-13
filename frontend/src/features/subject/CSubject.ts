@@ -10,6 +10,7 @@ import useSelectInput from '@/components/forms/SelectInput/useSelectInput.ts';
 import useCreateSubject from '@/logic/hooks/subjects/useCreateSubject.ts';
 import useTextAreaInput from '@/components/forms/TextAreaInput/useTextAreaInput.ts';
 import Status from '@/domain/dtos/Status.ts';
+import regex from '@/configuration/regex.ts';
 
 const CSubject = (subjectId: number) => {
   const { authState } = useContext(authContext);
@@ -21,6 +22,18 @@ const CSubject = (subjectId: number) => {
   const { getTeachersNamesList, getTeachers } = useGetTeachers(
     authState.schoolId ?? 0,
   );
+
+  const name = useTextInput({
+    initialValue: subjectId === 0 ? '' : subject.data?.data.name ?? '',
+    pattern: regex.POLISH_LETTERS_SPACES_NUMBERS,
+    required: true,
+  });
+
+  const description = useTextAreaInput({
+    initialValue: subjectId === 0 ? '' : subject.data?.data.description ?? '',
+    pattern: regex.POLISH_LETTERS_SPACES_NUMBERS,
+    required: true,
+  });
 
   useEffect(() => {
     if (getTeachersNamesList && teacherList.options.length === 0) {
@@ -37,16 +50,6 @@ const CSubject = (subjectId: number) => {
       teacherList.setSelected(subject.data?.data.teacherId ?? 0);
     }
   }, []);
-
-  const name = useTextInput({
-    initialValue: subjectId === 0 ? '' : subject.data?.data.name ?? '',
-    required: true,
-  });
-
-  const description = useTextAreaInput({
-    initialValue: subjectId === 0 ? '' : subject.data?.data.description ?? '',
-    required: true,
-  });
 
   const teacherList = useSelectInput();
 

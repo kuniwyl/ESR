@@ -12,9 +12,11 @@ public class PresenceDto: IBaseDto
     
     public PresenceStatus PresenceStatus { get; set; } = PresenceStatus.Absent;
     
-    public string LessonName { get; set; } = null!;
+    public string? LessonName { get; set; } = null!;
     public int LessonId { get; set; }
     
-    public string StudentName { get; set; } = null!;
+    public int? CssId { get; set; } = null!;
+    
+    public string? StudentName { get; set; } = null!;
     public int StudentId { get; set; }
 }

@@ -9,12 +9,9 @@ namespace Application.DB.DataContext;
 public class SchoolContext : DbContext
 {
     // School
-    public DbSet<Assignment?> Assignments { get; set; } = null!;
     public DbSet<Address> Addresses { get; set; } = null!;
     public DbSet<BehaviorGrade> BehaviorGrades { get; set; } = null!;
     public DbSet<Class> Classes { get; set; } = null!;
-    public DbSet<ClassNotice> ClassesNotice { get; set; } = null!;
-    
     public DbSet<Grade> Grades { get; set; } = null!;
     public DbSet<Notice> Notices { get; set; } = null!;
     public DbSet<School> Schools { get; set; } = null!;
@@ -24,6 +21,8 @@ public class SchoolContext : DbContext
     public DbSet<ClassSubjectSemesterInstance> ClassSubjectSemesterInstances { get; set; } = null!;
     public DbSet<Lesson> Lessons { get; set; } = null!;
     public DbSet<Presence> Presences { get; set; } = null!;
+    public DbSet<FinalGrade> FinalGrades { get; set; } = null!;
+    public DbSet<ClassNotice> ClassNotices { get; set; } = null!;
     
     // Users
     public DbSet<SchoolAdmin> SchoolAdmins { get; set; } = null!;

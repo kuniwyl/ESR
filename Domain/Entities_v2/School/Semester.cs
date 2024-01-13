@@ -24,5 +24,4 @@ public class Semester: IEntityBase
     
     public virtual List<ClassSubjectSemester> ClassSubjectSemesters { get; set; } = new List<ClassSubjectSemester>();
     public virtual List<Notice> Notices { get; set; } = new List<Notice>();
-    public virtual List<ClassNotice> ClassNotices { get; set; } = new List<ClassNotice>();
 }

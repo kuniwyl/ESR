@@ -13,7 +13,7 @@ public class GradeDto: IBaseDto
     public int Weight { get; set; }
     public string Description { get; set; }
     
-    public int AssignmentId { get; set; }
+    public int ClassSubjectSemesterId { get; set; }
     public int StudentId { get; set; }
     
     public string StudentName { get; set; } = "";
