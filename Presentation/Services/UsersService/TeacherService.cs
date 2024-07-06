@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using Application.Dto.Users;
 using Application.Exceptions;
 using Application.IServices.Users;
@@ -109,7 +110,16 @@ public class TeacherService: BaseService<TeacherDto, Teacher>, ITeacherService
 
     public async override Task<bool> Authorize(TeacherDto entity)
     {
+        var userId = _contextAccessor.GetUserId();
+        var user = await _userRepository.GetById(int.Parse(userId));
+        if (user == null)
+        {
+            throw new ObjectNotFoundException<User>(int.Parse(userId));
+        }
+
         var schoolId = _contextAccessor.GetSchoolId();
-        return await ((ITeacherRepository) _repository).IsTeacherInSchool(entity.Id, schoolId);
+        if (entity.SchoolId != schoolId) throw new AuthenticationException("You are not authorized to perform this action");
+
+        return true;
     }
 }

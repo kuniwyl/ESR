@@ -16,8 +16,8 @@ class RNotice implements IRNotice {
 
   getNoticeBySemseterIdBetweenDates(
     semesterId: number,
-    startDate: Date,
-    endDate: Date,
+    startDate: string,
+    endDate: string,
   ): Promise<ServiceResponse<NoticeDto[]>> {
     return axiosInstance
       .get(

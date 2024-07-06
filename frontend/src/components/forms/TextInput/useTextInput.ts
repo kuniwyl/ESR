@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 interface IUseTextInput {
   initialValue: string;
@@ -63,16 +63,13 @@ const useTextInput = (props: IUseTextInput) => {
     return true;
   };
 
-  const onChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      if (isValid(event.target.value)) {
-        setError('');
-      }
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (isValid(event.target.value)) {
+      setError('');
+    }
 
-      setValue(event.target.value);
-    },
-    [props.maxLength, props.minLength, props.pattern],
-  );
+    setValue(event.target.value);
+  };
 
   return { value, error, onChange, setValue, isValid, onKeyPress, setError };
 };

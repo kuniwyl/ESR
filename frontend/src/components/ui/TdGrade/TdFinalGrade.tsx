@@ -22,10 +22,10 @@ const TdGrade = (props: TdGradeProps) => {
   );
 };
 
+export default TdGrade;
+
 const style = {
   width: '30px',
   height: '30px',
   border: '1px solid black',
 };
-
-export default TdGrade;

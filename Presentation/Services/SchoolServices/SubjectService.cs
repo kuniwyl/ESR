@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using Application.Dto.School;
 using Application.Exceptions;
 using Application.IServices;
@@ -38,8 +39,8 @@ public class SubjectService: BaseService<SubjectDto, Subject>, ISubjectService
     public override async void Validate(SubjectDto entity)
     {
         var isExist = await _repository.Exists(entity.Id);
-        var isName = ValidatorUtil.ValidateText(entity.Name, 3, 50, RegexExpression.PolishLettersRegex);
-        var isDescription = ValidatorUtil.ValidateText(entity.Description, 3, 150, RegexExpression.PolishLettersWithNumbersRegex);
+        var isName = ValidatorUtil.ValidateText(entity.Name, 3, 50, RegexExpression.PolishLettersSpacesNumbers);
+        var isDescription = ValidatorUtil.ValidateText(entity.Description, 3, 150, RegexExpression.PolishLettersSpacesNumbers);
         var isSchoolId = await _existRepository.IsSchoolExist(entity.SchoolId);
         var isTeacherId = await _existRepository.IsTeacherExist(entity.TeacherId);
         
@@ -52,6 +53,8 @@ public class SubjectService: BaseService<SubjectDto, Subject>, ISubjectService
 
     public async override Task<bool> Authorize(SubjectDto entity)
     {
+        var schoolId = _contextAccessor.GetSchoolId();
+        if (schoolId != entity.SchoolId) throw new AuthenticationException("You are not authorized to this school");
         return true;
     }
 }

@@ -1,8 +1,8 @@
 enum Status {
-  Active,
-  Changed,
-  Deleted,
-  Archived,
+  Aktywny,
+  Zmieniony,
+  Usunięty,
+  Archiwizowany,
 }
 
 export default Status;

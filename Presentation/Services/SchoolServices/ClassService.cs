@@ -33,11 +33,11 @@ public class ClassService: BaseService<ClassDto, Class>, IClassService
     public override async void Validate(ClassDto entity)
     {
         var isExist = await _repository.Exists(entity.Id);
-        var isName = ValidatorUtil.ValidateText(entity.Name, 3, 50, RegexExpression.PolishLettersRegex);
-        var isDescription = ValidatorUtil.ValidateText(entity.Description, 3, 150, RegexExpression.PolishLettersWithNumbersRegex);
-        var isNameId = ValidatorUtil.ValidateText(entity.NameId, 3, 50, "[A-Z]{1}[0-9]{1}");
-        var isSchoolId = await _existRepository.IsSchoolExist(entity.SchoolId);
+        var isName = ValidatorUtil.ValidateText(entity.Name, 3, 50, RegexExpression.PolishLettersSpacesNumbers);
+        var isNameId = ValidatorUtil.ValidateText(entity.NameId, 3, 50, RegexExpression.ClassNameId);
+        var isDescription = ValidatorUtil.ValidateText(entity.Description, 3, 100, RegexExpression.PolishLettersSpacesNumbers);
         var isTeacherId = await _existRepository.IsTeacherExist(entity.TeacherId);
+        var isSchoolId = await _existRepository.IsSchoolExist(entity.SchoolId);
         
         // if (isExist) throw new ValidationException<ClassDto>("Class with this id already exists");
         // if (!isName) throw new ValidationException<ClassDto>("Class name is invalid");

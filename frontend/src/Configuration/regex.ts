@@ -11,6 +11,7 @@ const regex = {
   ZIP_CODE: /^[0-9]{2}-[0-9]{3}$/,
   SEMESTER: /^[0-9]{4}\/[0-9]{4}[ZL]$/,
   CLASS_NAME_ID: /^[A-Z]{1}[1-9]{1}$/,
+  PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$/,
 };
 
 export default regex;

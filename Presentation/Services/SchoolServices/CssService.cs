@@ -124,22 +124,11 @@ public class CssService: BaseService<ClassSubjectSemesterDto, ClassSubjectSemest
 
     public override async void Validate(ClassSubjectSemesterDto entity)
     {
-        // var isExist = await _repository.Exists(entity.Id);
-        // var isSlot = ValidatorUtil.ValidateIsIntegerBetween(entity.Slot, 1, 14);
-        // var isClassId = await _existRepository.IsClassExist(entity.ClassId);
-        // var isSubjectId = await _existRepository.IsSubjectExist(entity.SubjectId);
-        // var isSemesterId = await _existRepository.IsSemesterExist(entity.SemesterId);
-        //
-        // if (isExist) throw new ValidationException<ClassSubjectSemesterDto>("ClassSubjectSemester with this id already exists");
-        // if (!isSlot) throw new ValidationException<ClassSubjectSemesterDto>("ClassSubjectSemester slot is invalid");
-        // if (!isClassId) throw new ValidationException<ClassSubjectSemesterDto>("ClassSubjectSemester class id is invalid");
-        // if (!isSubjectId) throw new ValidationException<ClassSubjectSemesterDto>("ClassSubjectSemester subject id is invalid");
-        // if (!isSemesterId) throw new ValidationException<ClassSubjectSemesterDto>("ClassSubjectSemester semester id is invalid");
+        throw new NotAuthorizedException<ClassSubjectSemester>("You are not authorized to do this action");
     }
 
     public async override Task<bool> Authorize(ClassSubjectSemesterDto entity)
     {
-        
         var schoolId = _contextAccessor.GetSchoolId();
         var classId = entity.ClassId;
         var semesterId = entity.SemesterId;

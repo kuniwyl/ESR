@@ -2,12 +2,14 @@ using Application.Dto.School;
 using Application.IServices;
 using Application.IServices.School;
 using Domain.Entities_v2.School;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers.SchoolControllers;
 
 [ApiController]
 [Route("api/cssInstance")]
+[Authorize]
 public class CssInstanceController: BaseController<ClassSubjectSemesterInstanceDto, ClassSubjectSemesterInstance>
 {
     public CssInstanceController(IHttpContextAccessor contextAccessor, ICssInstanceService service) : base(contextAccessor, service)

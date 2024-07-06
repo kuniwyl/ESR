@@ -195,8 +195,8 @@ public class StudentService: BaseService<StudentDto, Student>, IStudentService
     {
         var isExist = await _repository.Exists(entity.Id);
         var isLogin = ValidatorUtil.ValidateText(entity.Login, 3, 50, "^[a-zA-Z0-9]+$");
-        var isFirstName = ValidatorUtil.ValidateText(entity.FirstName, 3, 50, RegexExpression.PolishLettersRegex);
-        var isLastName = ValidatorUtil.ValidateText(entity.LastName, 3, 50, RegexExpression.PolishLettersRegex);
+        var isFirstName = ValidatorUtil.ValidateText(entity.FirstName, 3, 50, RegexExpression.PolishLetters);
+        var isLastName = ValidatorUtil.ValidateText(entity.LastName, 3, 50, RegexExpression.PolishLetters);
         var isSchoolId = await _existRepository.IsSchoolExist(entity.SchoolId);
         var isClassId = await _existRepository. IsClassExist(entity.ClassId);
         

@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using Application.Dto.Users;
 using Application.Exceptions;
 using Application.IServices;
@@ -90,9 +91,9 @@ public class ParentService: BaseService<ParentDto, Parent>, IParentService
     public override async void Validate(ParentDto entity)
     {
         var isExist = await _repository.Exists(entity.Id);
-        var isFirstName = ValidatorUtil.ValidateText(entity.FirstName, 3, 50, RegexExpression.PolishLettersRegex);
-        var isLastName = ValidatorUtil.ValidateText(entity.LastName, 3, 50, RegexExpression.PolishLettersRegex);
-        var isLogin = ValidatorUtil.ValidateText(entity.Login, 3, 50, RegexExpression.PolishLettersWithNumbersRegex);
+        var isFirstName = ValidatorUtil.ValidateText(entity.FirstName, 3, 50, RegexExpression.PolishLetters);
+        var isLastName = ValidatorUtil.ValidateText(entity.LastName, 3, 50, RegexExpression.PolishLetters);
+        var isLogin = ValidatorUtil.ValidateText(entity.Login, 3, 50, RegexExpression.PolishLettersNumbers);
         var isStudentId = await _existRepository.IsStudentExist(entity.StudentId);
         var isSchoolId = await _existRepository.IsSchoolExist(entity.SchoolId);
         
@@ -106,6 +107,16 @@ public class ParentService: BaseService<ParentDto, Parent>, IParentService
 
     public async override Task<bool> Authorize(ParentDto entity)
     {
+        var userId = _contextAccessor.GetUserId();
+        var user = await _userRepository.GetById(int.Parse(userId));
+        if (user == null)
+        {
+            throw new ObjectNotFoundException<User>(int.Parse(userId));
+        }
+
+        var schoolId = _contextAccessor.GetSchoolId();
+        if (entity.SchoolId != schoolId) throw new AuthenticationException("You are not authorized to perform this action");
+
         return true;
     }
 }

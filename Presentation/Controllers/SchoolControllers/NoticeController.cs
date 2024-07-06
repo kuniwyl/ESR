@@ -1,10 +1,9 @@
 using Application.Dto.School;
-using Application.IServices;
 using Application.IServices.School;
 using Domain.Entities_v2.School;
+using Domain.Entities_v2.Types;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Utils;
 
 namespace Presentation.Controllers.SchoolControllers;
 
@@ -19,6 +18,7 @@ public class NoticeController: BaseController<NoticeDto, Notice>
     }
     
     [HttpGet("semester/{semesterId}")]
+    [Authorize]
     public async Task<IActionResult> GetNotices(int semesterId)
     {
         var notices = await Service.GetNoticesFromSchoolAndSemester(semesterId);
@@ -42,6 +42,7 @@ public class NoticeController: BaseController<NoticeDto, Notice>
     }
     
     [HttpGet("semester/{semesterId}/fromDate/{fromDate}/toDate/{toDate}")]
+    [Authorize]
     public async Task<IActionResult> GetNotices(int semesterId, DateTime fromDate, DateTime toDate)
     {
         var notices = await Service.GetNoticesFromSemesterBetweenDates(semesterId, fromDate, toDate);
@@ -49,18 +50,21 @@ public class NoticeController: BaseController<NoticeDto, Notice>
     }
     
     [HttpPost]
+    [Authorize(Roles = UserRole.Teacher)]
     public new async Task<IActionResult> Create(NoticeDto entity)
     {
         return await base.Create(entity);
     }
     
     [HttpPut("{id}")]
+    [Authorize(Roles = UserRole.Teacher)]
     public new async Task<IActionResult> Update(int id, NoticeDto entity)
     {
         return await base.Update(id, entity);
     }
     
     [HttpDelete("{id}")]
+    [Authorize(Roles = UserRole.Teacher)]
     public new async Task<IActionResult> Delete(int id)
     {
         return await base.Delete(id);

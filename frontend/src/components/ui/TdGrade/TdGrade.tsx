@@ -26,7 +26,7 @@ const TdGrade = (props: TdGradeProps) => {
     >
       {grade.value}
       {mouseOver && grade.description && (
-        <div className={'gradeDescription'}>{grade.description}</div>
+        <div className={'gradeDescription bg-info'}>{grade.description}</div>
       )}
     </span>
   );

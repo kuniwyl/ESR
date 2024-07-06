@@ -35,6 +35,7 @@ const CClass = (classId: number) => {
 
   const name = useTextInput({
     initialValue: getClass.data?.data.name ?? '',
+    minLength: 3,
     maxLength: 50,
     required: true,
     pattern: regex.POLISH_LETTERS_SPACES_NUMBERS,
@@ -42,6 +43,7 @@ const CClass = (classId: number) => {
 
   const nameId = useTextInput({
     initialValue: getClass.data?.data.nameId ?? '',
+    minLength: 3,
     maxLength: 50,
     required: true,
     pattern: regex.CLASS_NAME_ID,
@@ -49,6 +51,7 @@ const CClass = (classId: number) => {
 
   const description = useTextAreaInput({
     initialValue: getClass.data?.data.description ?? '',
+    minLength: 3,
     maxLength: 100,
     required: true,
     pattern: regex.POLISH_LETTERS_SPACES_NUMBERS,
@@ -78,7 +81,7 @@ const CClass = (classId: number) => {
       id: classId,
       created: getClass.data?.data.created ?? new Date(),
       updated: new Date(),
-      status: Status.Changed,
+      status: Status.Zmieniony,
       name: name.value,
       nameId: nameId.value,
       description: description.value,
@@ -97,7 +100,7 @@ const CClass = (classId: number) => {
         id: 0,
         created: new Date(),
         updated: new Date(),
-        status: Status.Active,
+        status: Status.Aktywny,
         name: name.value,
         nameId: nameId.value,
         description: description.value,

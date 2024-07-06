@@ -22,12 +22,14 @@ public class CssInstanceService: BaseService<ClassSubjectSemesterInstanceDto, Cl
     private readonly ICssRepository _cssRepository;
     private readonly ISemesterRepository _semesterRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IClassRepository _classRepository;
     
-    public CssInstanceService(ICssInstanceRepository repository, ISemesterRepository semesterRepository, IUserRepository userRepository, ICssRepository cssRepository, IMapper mapper, IExistRepository existRepository, IHttpContextAccessor contextAccessor) : base(repository, mapper, existRepository, contextAccessor)
+    public CssInstanceService(ICssInstanceRepository repository, ISemesterRepository semesterRepository, IClassRepository classRepository, IUserRepository userRepository, ICssRepository cssRepository, IMapper mapper, IExistRepository existRepository, IHttpContextAccessor contextAccessor) : base(repository, mapper, existRepository, contextAccessor)
     {
         _cssRepository = cssRepository;
         _semesterRepository = semesterRepository;
         _userRepository = userRepository;
+        _classRepository = classRepository;
     }
 
     public async Task<ServiceResponse<List<ClassSubjectSemesterInstanceDto>>> GetBySemesterIdAndClassId(int semesterId, int classId)
@@ -118,8 +120,38 @@ public class CssInstanceService: BaseService<ClassSubjectSemesterInstanceDto, Cl
         throw new NotImplementedException();
     }
 
-    public async override Task<bool> Authorize(ClassSubjectSemesterInstanceDto entity)
+    public override async Task<bool> Authorize(ClassSubjectSemesterInstanceDto entity)
     {
+        var cssId = entity.ClassSubjectSemesterId;
+        var css = await _cssRepository.GetById(cssId);
+        if (css == null) throw new ValidationException<ClassSubjectSemesterInstanceDto>("Css not found");
+        
+        var userId = _contextAccessor.GetUserId();
+        var classId = css.ClassId;
+
+        var user = await _userRepository.GetById(int.Parse(userId));
+        if (user == null) throw new ValidationException<ClassSubjectSemesterInstanceDto>("User not found");
+        
+        if (user.Role == UserRole.Teacher)
+        {
+            var teacher = (Teacher)user;
+            var classOfTeacher = await _classRepository.GetById(teacher.ClassId);
+            if (classOfTeacher == null) throw new ValidationException<ClassSubjectSemesterInstanceDto>("Class not found");
+            if (classOfTeacher.Id != classId) throw new ValidationException<ClassSubjectSemesterInstanceDto>("Teacher not in class");
+        } else if (user.Role == UserRole.Student)
+        {
+            if (((Student) user).ClassId != classId) throw new ValidationException<ClassSubjectSemesterInstanceDto>("Student not in class");
+        } else if (user.Role == UserRole.Parent)
+        {
+            var student = await _userRepository.GetById(((Parent) user).StudentId);
+            if (student == null) throw new ValidationException<ClassSubjectSemesterInstanceDto>("Student not found");
+            if (((Student) student).ClassId != classId) throw new ValidationException<ClassSubjectSemesterInstanceDto>("Student not in class");
+        }
+        else
+        {
+            throw new ValidationException<ClassSubjectSemesterInstanceDto>("User not found");
+        }
+
         return true;
     }
 }

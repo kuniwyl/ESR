@@ -24,6 +24,6 @@ public class BehaviorGradeService: BaseService<BehaviorGradeDto, BehaviorGrade>,
 
     public async override Task<bool> Authorize(BehaviorGradeDto entity)
     {
-        return true;
+        throw new Exception("Not implemented");
     }
 }

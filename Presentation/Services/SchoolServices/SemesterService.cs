@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using Application.Dto.School;
 using Application.Exceptions;
 using Application.IServices;
@@ -45,7 +46,7 @@ public class SemesterService: BaseService<SemesterDto, Semester>, ISemesterServi
     public override async void Validate(SemesterDto entity)
     {
         var isExist = await _repository.Exists(entity.Id);
-        var isName = ValidatorUtil.ValidateText(entity.Name, 3, 50, RegexExpression.PolishLettersRegex);
+        var isName = ValidatorUtil.ValidateText(entity.Name, 3, 50, RegexExpression.PolishLettersSpacesNumbers);
         var isDailyLessonCount = ValidatorUtil.ValidateIsIntegerBetween(entity.DailyLessonCount, 1, 14);
         var isLessonDuration = ValidatorUtil.ValidateIsIntegerBetween(entity.LessonDuration, 30, 60);
         var isBreakDuration = ValidatorUtil.ValidateIsIntegerBetween(entity.BreakDuration, 5, 30);
@@ -63,6 +64,8 @@ public class SemesterService: BaseService<SemesterDto, Semester>, ISemesterServi
 
     public async override Task<bool> Authorize(SemesterDto entity)
     {
+        var schoolId = _contextAccessor.GetSchoolId();
+        if (entity.SchoolId != schoolId) throw new AuthenticationException("You are not authorized to perform this action");
         return true;
     }
 }
